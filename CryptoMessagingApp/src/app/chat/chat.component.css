@@ -1,0 +1,87 @@
+body {background-color:rgb(99, 99, 99);}
+.container{background-color:#135;}
+.row{background-color:white;}
+.example_a {
+  color: #fff !important;
+  text-transform: uppercase;
+  background: #135;
+  padding: 19px;
+  border-radius: 5px;
+  display: inline-block;
+  border: none;
+  }
+  .example_a:hover {
+    background: #434343;
+    letter-spacing: 1px;
+    -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+    box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+    transition: all 0.4s ease 0s;
+    }
+.dropbtn {
+  background-color: #135;
+  color: white;
+  padding: 19px;
+  font-size: 16px;
+  border: none;
+}
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+.dropup-content {
+  display: none;
+  position: absolute;
+  background-color: #135;
+  min-width: 190px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropup-content a {
+  color: black;
+  display: none;
+  position: absolute;
+  background-color: rgb(99, 99, 99);
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropup-content a:hover {background-color: #434343}
+.dropup:hover .dropup-content {display: block;}
+.dropup:hover .dropbtn {background: #434343;}
+
+body {
+  margin-bottom: 200%;
+  }
+  
+  /* Box styles */
+  .myBox {
+  border: none;
+  padding: 5px;
+  font: 24px/36px sans-serif;
+  width: auto;
+  height: 200px;
+  overflow: scroll;
+  }
+  
+  /* Scrollbar styles */
+  ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+  border: 1px solid rgb(99, 99, 99);;
+  border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+  background: g;  
+  border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+  background: rgb(99, 99, 99);;  
+  }  
+
+  html, body { height: 100%; }

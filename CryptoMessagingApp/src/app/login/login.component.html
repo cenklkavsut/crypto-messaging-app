@@ -1,0 +1,27 @@
+<div class="container">
+  <div class= "container">   
+     <div style="text-align:center">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Crypto Messaging Application</title>
+        <script src="login.component.ts"></script>
+      </head>
+      <body>
+          <div class="container">   
+              <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>    
+            <form class="form-signin">
+              <h1 class="form-signin-heading text-muted">Sign In</h1>
+              <input type="text" class="form-control" placeholder="username" required="" autofocus="" [(ngModel)]="username">
+              <input type="password" class="form-control" placeholder="Password" required="" [(ngModel)]="password">
+              <div>
+              <button class="btn btn-lg btn-primary btn-block" class="example_a" type="submit" (click)="signIn()">Sign In</button>
+            </div>
+            <div>
+            <a  routerLink="/register" routerLinkActive="active"  class="text-info">Register here</a>
+          </div>              
+         <div>        
+          </div>              
+          </form>
+          </div>
+      </body></div></div>
