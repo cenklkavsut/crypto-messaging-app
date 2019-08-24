@@ -30,6 +30,9 @@ var BookModel = require('../models/Book');
         },
         message: {
           type: GraphQLString
+        },
+        updated_date: {
+          type: GraphQLDate
         }
       }
     }
@@ -127,7 +130,7 @@ var queryType = new GraphQLObjectType({
               }
           },
           resolve(root, params) {
-            return BookModel.findByIdAndUpdate(params.id, { isbn: params.isbn, title: params.title, author: params.author, description: params.description, published_year: params.published_year, publisher: params.publisher, updated_date: new Date() }, function (err) {
+            return BookModel.findByIdAndUpdate(params.id, { username: params.username, password: params.password, currentRoom: params.currentRoom, recipient: params.recipient, message: params.message, updated_date: new Date() }, function (err) {
               if (err) return next(err);
             });
           }
@@ -150,4 +153,5 @@ var queryType = new GraphQLObjectType({
       }
     }
   });  
+  
   module.exports = new GraphQLSchema({query: queryType, mutation: mutation});
