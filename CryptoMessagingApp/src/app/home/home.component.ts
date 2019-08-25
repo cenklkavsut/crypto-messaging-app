@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { Book } from '../../../../node-graphql/server/models/book';
 
 @Component({
   selector: 'app-home',
@@ -45,5 +44,6 @@ delete():void{  this.roomName=this.add;
      this.roomList.splice(index, 1);alert('Room deleted!');
     }
   }//this removes a room name to the list
+  
  ngOnInit() {}
 }

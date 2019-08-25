@@ -151,4 +151,5 @@ var queryType = new GraphQLObjectType({
     }
   });  
   
+  
   module.exports = new GraphQLSchema({query: queryType, mutation: mutation});

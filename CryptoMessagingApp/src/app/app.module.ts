@@ -25,6 +25,7 @@ import {
   MatCardModule,
   MatFormFieldModule } from '@angular/material';
 import {  ReactiveFormsModule } from '@angular/forms';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ RegistrationComponent
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    GraphQLModule
   ],
   providers: [],
   bootstrap: [AppComponent]
