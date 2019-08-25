@@ -28,9 +28,15 @@ var BookModel = require('../models/Book');
         recipient: {
           type: GraphQLString
         },
-        message: {
+        sender: {
           type: GraphQLString
-        }
+        },
+        passpharse: {
+          type: GraphQLString
+        },
+       /* updated_date: {
+          type: GraphQLDate
+        }*/
       }
     }
   });
@@ -90,8 +96,11 @@ var queryType = new GraphQLObjectType({
               recipient: {
                 type: new GraphQLNonNull(GraphQLString)
               },
-              message: {
-                type: new GraphQLNonNull(GraphQLInt)
+              sender: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              passpharse: {
+                type: new GraphQLNonNull(GraphQLString)
               }
           },
           resolve: function (root, params) {
@@ -122,12 +131,15 @@ var queryType = new GraphQLObjectType({
               recipient: {
                 type: new GraphQLNonNull(GraphQLString)
               },
-              message: {
-                type: new GraphQLNonNull(GraphQLInt)
+              sender: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              passpharse: {
+                type: new GraphQLNonNull(GraphQLString)
               }
           },
           resolve(root, params) {
-            return BookModel.findByIdAndUpdate(params.id, { username: params.username, password: params.password, currentRoom: params.currentRoom, recipient: params.recipient, message: params.message }, function (err) {
+            return BookModel.findByIdAndUpdate(params.id, { username: params.username, password: params.password, currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passpharse: params.passpharse/*, updated_date: new Date()*/}, function (err) {
               if (err) return next(err);
             });
           }
@@ -150,6 +162,5 @@ var queryType = new GraphQLObjectType({
       }
     }
   });  
-  
   
   module.exports = new GraphQLSchema({query: queryType, mutation: mutation});

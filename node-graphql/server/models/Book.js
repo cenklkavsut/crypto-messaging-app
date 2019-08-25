@@ -6,7 +6,8 @@ var BookSchema = new mongoose.Schema({
   password: String,
   currentRoom: String,
   recipient: String,
-  message: String,
+  sender: String,
+  passphrase: String,
+  //updated_date: { type: Date, default: Date.now },
 });
-
 module.exports = mongoose.model('Book', BookSchema);

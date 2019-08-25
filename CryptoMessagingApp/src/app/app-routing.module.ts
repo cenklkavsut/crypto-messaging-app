@@ -11,4 +11,5 @@ const routes: Routes = [{path:  'login', component:  LoginComponent},{path:  'ho
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 }) 
+
 export class AppRoutingModule { }

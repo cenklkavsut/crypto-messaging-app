@@ -1,33 +1,33 @@
 <div class="container">
-                <div style="text-align:center">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-       <script src="chat.component.ts"></script>
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-       <div class="container">
-       <font style="color: white"><h2>Crypto Messaging Application</h2></font>  
-        <button type="button" class="btn btn-default" class="example_a"  style="height:9px;" (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
-        <div class="dropup"><button class="dropbtn" >Messagaging verification <i class="fa fa-bars" ></i></button>
-        <div class="dropup-content"> <font style="color: white"><label>Ark wallet info required for Messaging!</label></font>                        
-        <div><font style="color: white"><label>Recipient:</label></font>
-        <input type="text"  [(ngModel)]="recipientId" style="align-self: auto;"></div>
-        <div> <font style="color: white"><label>Sender Id:</label></font>
-        <input type="text" [(ngModel)]="SenderId"  style="align-self: auto;"></div>
-        <div><font style="color: white"><label>Password of wallet:</label></font>
-            <input type="text"  [(ngModel)]="passPhrase" style="align-self: auto;"></div>    
-        <div> <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="confirm()">confirm</button></div>              
-                </div> </div> 
-                    <div class="row">
-                <font style="color: white"><h2>Crypto Messaging Application</h2></font>
-                <div class="myBox">
-                <div class="well" >
-                    <div *ngFor="let item of messageArray">
-                    <span><strong>{{user}} : </strong> {{item}}</span>
-                    </div>
-                </div>
-            </div></div>
+    <div style="text-align:center">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="chat.component.ts"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="container">
+<font style="color: white"><h2>Crypto Messaging Application</h2></font>  
+<button type="button" class="btn btn-default" class="example_a"  style="height:9px;" (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
+<div class="dropup"><button class="dropbtn" >Messagaging verification <i class="fa fa-bars" ></i></button>
+<div class="dropup-content"> <font style="color: white"><label>Ark wallet info required for Messaging!</label></font>                        
+<div><font style="color: white"><label>Recipient:</label></font>
+<input type="text"  [(ngModel)]="recipientId" style="align-self: auto;"></div>
+<div> <font style="color: white"><label>Sender Id:</label></font>
+<input type="text" [(ngModel)]="SenderId"  style="align-self: auto;"></div>
+<div><font style="color: white"><label>Password of wallet:</label></font>
+<input type="text"  [(ngModel)]="passPhrase" style="align-self: auto;"></div>    
+<div> <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="confirm()">confirm</button></div>              
+    </div> </div> 
+        <div class="row">
+    <font style="color: white"><h2>Crypto Messaging Application</h2></font>
+    <div class="myBox">
+    <div class="well" >
+        <div *ngFor="let item of messageArray">
+        <span><strong>{{user}} : </strong> {{item}}</span>
         </div>
-            <div class="row"><div class="col-sm-10">
-                 <input type="text" class="form-control" [(ngModel)]="messageText" style="width:79%;">     
-                 <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="sendMessage()" >Send</button>
-                </div><div class="container" style="text-align:left;"> <font style="color: white"><h2>{{roomName}}</h2></font>
-        </div></div></div>
+    </div>
+</div></div>
+</div>
+<div class="row"><div class="col-sm-10">
+     <input type="text" class="form-control" [(ngModel)]="messageText" style="width:79%;">     
+     <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="sendMessage()" >Send</button>
+    </div><div class="container" style="text-align:left;"> <font style="color: white"><h2>{{roomName}}</h2></font>
+</div></div></div>

@@ -1,10 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
-import * as express from "express";
-import * as socketio from "socket.io";
-import * as path from "path";
 
 @Component({
   selector: 'app-login',

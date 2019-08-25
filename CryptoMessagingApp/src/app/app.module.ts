@@ -14,18 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatInputModule,
-  MatPaginatorModule,
-  MatProgressSpinnerModule,
-  MatSortModule,
-  MatTableModule,
-  MatIconModule,
-  MatButtonModule,
-  MatCardModule,
-  MatFormFieldModule } from '@angular/material';
 import {  ReactiveFormsModule } from '@angular/forms';
-import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -47,16 +36,6 @@ RegistrationComponent
     BrowserAnimationsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    GraphQLModule
   ],
   providers: [],
   bootstrap: [AppComponent]
