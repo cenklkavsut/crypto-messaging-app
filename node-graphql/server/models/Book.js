@@ -7,7 +7,6 @@ var BookSchema = new mongoose.Schema({
   currentRoom: String,
   recipient: String,
   message: String,
-  updated_date: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Book', BookSchema);

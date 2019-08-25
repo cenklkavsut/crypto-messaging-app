@@ -20,8 +20,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
     this.roomLists(); 
   } //add in the constructor an auto load option and add user name and servers in the server
    //rooms:roominfo = new roominfo();
-  join():void{
-     //this.rooms.addRoom(this.roomName);
+  join():void{     //this.rooms.addRoom(this.roomName);
      this.router.navigate(["/chat"]);
     }
   

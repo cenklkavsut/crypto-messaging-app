@@ -3,11 +3,11 @@ roomNames:string;
 roomLists = new Array<string>();//this list contains room names
 
 constructor(){}
-
+//database needs to store login info and allow registering store room names and allow selecting a room.
 addRoom(name:string){
     this.roomLists.push(name);  
 }
-
+//server allow the messages to be seen if in the same room.//then finish the blockchain messaging bit.
 roomUse():string{
     for (var i = 0; i < this.roomLists.length; i++) 
     {
