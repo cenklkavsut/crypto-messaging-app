@@ -11,17 +11,34 @@
           <div class="container">   
               <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>    
             <form class="form-signin">
-              <h1 class="form-signin-heading text-muted">Sign In</h1>
-              <input type="text" class="form-control" placeholder="username" required="" autofocus="" [(ngModel)]="username">
-              <input type="password" class="form-control" placeholder="Password" required="" [(ngModel)]="password">
-              <div>
-              <button class="btn btn-lg btn-primary btn-block" class="example_a" type="submit" (click)="signIn()">Sign In</button>
-            </div>
-            <div>
-            <a  routerLink="/register" routerLinkActive="active"  class="text-info">Register here</a>
-          </div>              
-         <div>        
-          </div>              
+                <h4 class='mv3'>{{login ? 'Login' : 'Sign Up'}}</h4>
+                <div class='flex flex-column'>
+                  <input
+                    [(ngModel)]="username"
+                   input type="text" class="form-control"
+                    placeholder="Your username">
+                  <input
+                    [(ngModel)]="password"
+                    type="password" class="form-control"
+                    placeholder="Password">                  
+                    <input
+                    *ngIf="!login" 
+                    [(ngModel)]="confpassword"
+                    imput type="text" class="form-control"
+                    placeholder="confirm password">
+                </div>
+                <div class='flex mt3'>
+                  <div
+                    class='pointer mr2 button' class="example_a" 
+                    (click)="Sign()">
+                    {{login ? 'login' : 'create account'}}
+                  </div>
+                  <font style="color: white"><div
+                    class='pointer button'
+                    (click)="login = !login">
+                    {{login ? 'need to create an account?' : 'already have an account?'}}
+                  </div></font>
+                </div>    
           </form>
           </div>
       </body></div></div>

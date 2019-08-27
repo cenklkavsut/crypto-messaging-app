@@ -19,7 +19,7 @@ const crypto = require("@arkecosystem/crypto");//this allows for performing cryp
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-
+//if room is equal the same see messages from both sides send message over the blockchain and recive it.
 export class ChatComponent implements OnInit {
 roomName:string="room";//make a query that fetches the provided room
 recipientId:string='';//info from wallet to send or recieve message reipient is gonne be the room name 

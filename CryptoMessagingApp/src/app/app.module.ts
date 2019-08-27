@@ -13,6 +13,7 @@ import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 import { RegistrationComponent } from './registration/registration.component';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  ReactiveFormsModule } from '@angular/forms';
 
