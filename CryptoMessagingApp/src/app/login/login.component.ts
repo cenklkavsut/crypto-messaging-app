@@ -20,7 +20,9 @@ export class LoginComponent implements OnInit {
   
   constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo/*,private authService: AuthService*/) { }
 
-signIn():void{this.username=this.usernameConf;
+signIn():void{
+  this.username=this.usernameConf;
+  
         alert('Welcome!');
 this.router.navigate(["/home"]);
 }

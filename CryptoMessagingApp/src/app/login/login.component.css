@@ -10,8 +10,7 @@ body {
   background-color: rgb(99, 99, 99);
 }
 html, body { height: 100%; }
-.btn 
-{
+.btn {
 padding:9px; 
  outline:0;
  border:none;

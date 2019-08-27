@@ -10,8 +10,8 @@
       <body>
           <div class="container">   
               <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>    
+              
             <form class="form-signin">
-                <h4 class='mv3'>{{login ? 'Login' : 'Sign Up'}}</h4>
                 <div class='flex flex-column'>
                   <input
                     [(ngModel)]="username"
@@ -34,11 +34,14 @@
                     {{login ? 'login' : 'create account'}}
                   </div>
                   <font style="color: white"><div
-                    class='pointer button'
+                    class='pointer button' class="example_a" 
                     (click)="login = !login">
                     {{login ? 'need to create an account?' : 'already have an account?'}}
                   </div></font>
-                </div>    
+                </div>  
+                <h5 class="form-signin-heading text-muted">Click the left if it doesn't load and Sometimes the buttons require multiple clicks!</h5>      
           </form>
           </div>
-      </body></div></div>
+      </body>
+    </div>
+    </div>

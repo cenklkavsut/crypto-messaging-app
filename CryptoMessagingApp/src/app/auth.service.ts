@@ -1,7 +1,8 @@
-/*import {Injectable} from '@angular/core';
-import {BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {GC_AUTH_TOKEN, GC_USER_ID} from './constants';
-import { Observable } from 'rxjs'
+
 // 1
 @Injectable()
 export class AuthService {
@@ -50,4 +51,3 @@ export class AuthService {
     }
   }
 }
-*/

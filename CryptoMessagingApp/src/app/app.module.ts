@@ -12,7 +12,6 @@ import { LoginComponent } from './login/login.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
-import { RegistrationComponent } from './registration/registration.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  ReactiveFormsModule } from '@angular/forms';
@@ -24,7 +23,6 @@ import {  ReactiveFormsModule } from '@angular/forms';
     NavComponent,
     HomeComponent,
     ChatComponent,
-RegistrationComponent
     ],
   imports: [
     BrowserModule,
@@ -44,8 +42,8 @@ RegistrationComponent
 
 export class AppModule {
   constructor(
-    apollo: Apollo,//this connects to the graphql server
-    httpLink: HttpLink,
+    apollo: Apollo,
+    httpLink: HttpLink
   ) {
      apollo.create({
       link: httpLink.create({ uri: 'http://localhost:3000/graphql'}),
