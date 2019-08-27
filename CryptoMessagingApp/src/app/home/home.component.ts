@@ -14,6 +14,8 @@ roomName:string;//use this to delete room names
 add:string;
 roomList = new Array<string>();//this list contains room names
 message:string='name';//this needs a query that gets the list of rooms from database
+logged: boolean = false;
+
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) 
   {  
     this.roomLists(); 
@@ -45,5 +47,10 @@ delete():void{  this.roomName=this.add;
     }
   }//this removes a room name to the list
   
- ngOnInit() {}
+  logout():void{
+    this.router.navigate(["/login"]);
+  }
+
+  ngOnInit() {}
+
 }

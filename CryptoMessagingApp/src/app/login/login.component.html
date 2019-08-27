@@ -30,16 +30,18 @@
                 <div class='flex mt3'>
                   <div
                     class='pointer mr2 button' class="example_a" 
-                    (click)="Sign()">
-                    {{login ? 'login' : 'create account'}}
+                    (click)="signIn()">
+                    {{login ? 'login':'create account'}}
                   </div>
                   <font style="color: white"><div
                     class='pointer button' class="example_a" 
                     (click)="login = !login">
-                    {{login ? 'need to create an account?' : 'already have an account?'}}
+                    {{login ? 'need to create an account?':'already have an account?'}}
                   </div></font>
                 </div>  
-                <h5 class="form-signin-heading text-muted">Click the left if it doesn't load and Sometimes the buttons require multiple clicks!</h5>      
+                <h5 class="form-signin-heading text-muted">
+                  Click the left if it doesn't load and Sometimes 
+                  the buttons require multiple clicks and when registering click on login to completely load if it doesn't load!</h5>      
           </form>
           </div>
       </body>

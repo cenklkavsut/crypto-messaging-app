@@ -18,20 +18,18 @@ export class LoginComponent implements OnInit {
   login: boolean = true; // switch between Login and SignUp
 
   
-  constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo/*,private authService: AuthService*/) { }
+  constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) { }
 
 signIn():void{
   this.username=this.usernameConf;
-  
-        alert('Welcome!');
-this.router.navigate(["/home"]);
+  if(this.username!=null&&this.password!=null &&this.username!=""&&this.password!=""&&this.login==true){
+alert('Welcome!');
+//this.router.navigate(["/home"]);
+}else if(this.username==null&&this.password==null &&this.username!=""&&this.password!=""&&this.password!=this.passwordConf&&this.login==false){
+  alert('Account is generated!');
+//this.router.navigate(["/login"]);
 }
-
-/*saveUserData(id, token) {
-  localStorage.setItem(GC_USER_ID, id);
-  localStorage.setItem(GC_AUTH_TOKEN, token);
-  this.authService.setUserId(id);
-}*/
+}
 
   ngOnInit() { }
 }
