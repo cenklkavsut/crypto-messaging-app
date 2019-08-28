@@ -39,7 +39,7 @@ var BookModel = require('../models/Book');
         }*/
       }
     }
-  });//each time after the query is generated you pass it to to the schema
+  });
   
 var queryType = new GraphQLObjectType({
     name: 'Query',
