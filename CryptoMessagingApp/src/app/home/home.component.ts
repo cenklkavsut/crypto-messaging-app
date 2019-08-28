@@ -21,8 +21,15 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
     this.roomLists(); 
   } //add in the constructor an auto load option and add user name and servers in the server
    //rooms:roominfo = new roominfo();
-  join():void{     //this.rooms.addRoom(this.roomName);
-     this.router.navigate(["/chat"]);
+  join():void{     
+    for (var i = 0; i < this.roomList.length; i++) 
+    {
+     this.roomName=this.roomList[i];
+     i+=1;
+     //add the selected room
+     //this.rooms.addRoom(this.roomName);
+     } 
+    this.router.navigate(["/chat"]);
     }
   
   roomLists():string{
@@ -33,6 +40,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
        return this.roomName;//list all rooms by looping through
       } 
     }
+
 create():void{
   this.roomName=this.add;
   this.roomList.push(this.roomName);
@@ -50,7 +58,6 @@ delete():void{  this.roomName=this.add;
   logout():void{
     this.router.navigate(["/login"]);
   }
-
+  
   ngOnInit() {}
-
 }

@@ -12,22 +12,22 @@ import gql from 'graphql-tag';
 export class LoginComponent implements OnInit {
   public username: string;
   public password: string;
- 
   public usernameConf: string;
   public passwordConf: string;  
   login: boolean = true; // switch between Login and SignUp
-
   
   constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) { }
 
 signIn():void{
-  this.username=this.usernameConf;
   if(this.username!=null&&this.password!=null &&this.username!=""&&this.password!=""&&this.login==true){
+
 alert('Welcome!');
-//this.router.navigate(["/home"]);
-}else if(this.username==null&&this.password==null &&this.username!=""&&this.password!=""&&this.password!=this.passwordConf&&this.login==false){
-  alert('Account is generated!');
-//this.router.navigate(["/login"]);
+this.router.navigate(["/home"]);
+}
+else if(this.username==null&&this.password==null&&this.login==false){
+
+  alert('Account is generated, you will be redirected to login!');
+this.router.navigate(["/"]);
 }
 }
 
