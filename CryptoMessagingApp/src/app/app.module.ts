@@ -15,6 +15,7 @@ import { ChatComponent } from './chat/chat.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  ReactiveFormsModule } from '@angular/forms';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {  ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    GraphQLModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -42,12 +44,12 @@ import {  ReactiveFormsModule } from '@angular/forms';
 
 export class AppModule {
   constructor(
-    apollo: Apollo,
-    httpLink: HttpLink
+   // apollo: Apollo,
+    //httpLink: HttpLink
   ) {
-     apollo.create({
+     /*apollo.create({
       link: httpLink.create({ uri: 'http://localhost:3000/graphql'}),
       cache: new InMemoryCache()
-    });
+    });*/
   }
 }
