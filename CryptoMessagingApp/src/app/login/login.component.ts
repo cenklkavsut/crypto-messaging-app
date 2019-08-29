@@ -64,9 +64,9 @@ else if(this.username==null&&this.password==null&&this.password==this.passwordCo
 this.apollo.mutate({ mutation: this.addBook,
 variables: {
 username: this.username,password:this.password,currentRoom: this.temp,recipient: this.temp,sender: this.temp,passpharse: this.temp
-  }}).subscribe(({ data }) => {alert('got data '+data);
+  }}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login!');
   }, (error) => {alert('there was an error sending the query '+ error);});
-alert('Account is generated, you will be redirected to login!');this.login=true; 
+this.login=true; 
 }
 }
 ngOnInit() {}
