@@ -15,5 +15,5 @@ roomUse():string{
      i+=1;
       return this.roomNames;//list all rooms by looping through
      } 
-   }
+   }//basicly it needs a room query that canbe used together with user
 }//npm start ,yarn relay:devnet and sudo npm serve

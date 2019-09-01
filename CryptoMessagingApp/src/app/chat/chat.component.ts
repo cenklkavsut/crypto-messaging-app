@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-//import { Book } from '../../../../node-graphql/server/models/Book';
 //const Client = require("@arkecosystem/client");
 //const client = new Client("localhost:4003");//the blockchain node it point to
 
@@ -101,5 +100,6 @@ confirm(){//allows to comfirm
     alert("Empty or incorect information!");
   }
 }/**/
+
 ngOnInit() {}
 }//add transaction to the api pool

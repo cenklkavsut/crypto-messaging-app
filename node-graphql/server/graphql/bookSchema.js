@@ -8,8 +8,9 @@ var GraphQLString = require('graphql').GraphQLString;
 var GraphQLInt = require('graphql').GraphQLInt;
 //var GraphQLDate = require('graphql-date');
 var BookModel = require('../models/Book');
- 
-  var bookType = new GraphQLObjectType({
+var roomModel = require('../models/room');
+
+ var bookType = new GraphQLObjectType({
     name: 'book',
     fields: function () {
       return {
@@ -22,6 +23,17 @@ var BookModel = require('../models/Book');
         password: {
           type: GraphQLString
         },
+      }
+    }
+  });
+
+  var roomType = new GraphQLObjectType({
+    name: 'room',
+    fields: function () {
+      return {
+        _id: {
+          type: GraphQLString
+        },
         currentRoom: {
           type: GraphQLString
         },
@@ -31,12 +43,9 @@ var BookModel = require('../models/Book');
         sender: {
           type: GraphQLString
         },
-        passpharse: {
+        passphrase: {
           type: GraphQLString
         },
-       /* updated_date: {
-          type: GraphQLDate
-        }*/
       }
     }
   });
@@ -70,7 +79,32 @@ var queryType = new GraphQLObjectType({
             }
             return bookDetails
           }
-        }
+        },rooms: {
+          type: new GraphQLList(roomType),
+          resolve: function () {
+            const rooms = roomModel.find().exec()
+            if (!rooms) {
+              throw new Error('Error')
+            }
+            return rooms
+          }
+        },
+        room: {
+          type: roomType,
+          args: {
+            id: {
+              name: '_id',
+              type: GraphQLString
+            }
+          },
+          resolve: function (root, params) {
+            const roomDetails = roomModel.findById(params.id).exec()
+            if (!roomDetails) {
+              throw new Error('Error')
+            }
+            return roomDetails
+          }
+        }      
       }
     }
   });
@@ -89,18 +123,6 @@ var queryType = new GraphQLObjectType({
               },
               password: {
                 type: new GraphQLNonNull(GraphQLString)
-              },
-              currentRoom: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              recipient: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              sender: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              passpharse: {
-                type: new GraphQLNonNull(GraphQLString)
               }
           },
           resolve: function (root, params) {
@@ -110,6 +132,30 @@ var queryType = new GraphQLObjectType({
               throw new Error('Error');
             }
             return newBook
+          }
+        },addroom: {
+          type: roomType,
+          args: {
+            currentRoom: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              recipient: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              sender: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              passphrase: {
+                type: new GraphQLNonNull(GraphQLString)
+              }
+          },
+          resolve: function (root, params) {
+            const RoomModel = new roomModel(params);
+            const newRoom = RoomModel.save();
+            if (!newRoom) {
+              throw new Error('Error');
+            }
+            return newRoom
           }
         },
         updateBook: {
@@ -124,22 +170,27 @@ var queryType = new GraphQLObjectType({
               },
               password: {
                 type: new GraphQLNonNull(GraphQLString)
-              },
-              currentRoom: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              recipient: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              sender: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              passpharse: {
-                type: new GraphQLNonNull(GraphQLString)
               }
           },
           resolve(root, params) {
-            return BookModel.findByIdAndUpdate(params.id, { username: params.username, password: params.password, currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passpharse: params.passpharse/*, updated_date: new Date()*/}, function (err) {
+            return BookModel.findByIdAndUpdate(params.id, { username: params.username, password: params.password}, function (err) {
+              if (err) return next(err);
+            });
+          }
+        },updateRoom: {
+          type: roomType,
+          args: {
+            id: {
+              name: 'id',
+              type: new GraphQLNonNull(GraphQLString)
+            },
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve(root, params) {
+            return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
             });
           }
@@ -158,8 +209,23 @@ var queryType = new GraphQLObjectType({
             }
             return remBook;
           }
+        },
+        removeRoom: {
+          type: roomType,
+          args: {
+            id: {
+              type: new GraphQLNonNull(GraphQLString)
+            }
+          },
+          resolve(root, params) {
+            const remRoom = rookModel.findByIdAndRemove(params.id).exec();
+            if (!remRoom) {
+              throw new Error('Error')
+            }
+            return remRoom;
+          }
         }
       }
     }
   });  
-  module.exports = new GraphQLSchema({query: queryType, mutation: mutation});
+module.exports = new GraphQLSchema({query: queryType, mutation: mutation});

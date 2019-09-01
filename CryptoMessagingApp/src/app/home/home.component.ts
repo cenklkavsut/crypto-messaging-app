@@ -15,8 +15,8 @@ add:string;
 roomList = new Array<string>();//this list contains room names
 logged: boolean = false;
 
-addBook = gql`mutation addBook($currentRoom:String!) {
-  addBook(currentRoom:$currentRoom) {
+updateBook = gql`mutation updateBook($currentRoom:String!) {
+  updateBook(currentRoom:$currentRoom) {
   _id
   currentRoom
   }}`;
@@ -35,7 +35,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
      //add the selected room
      //this.rooms.addRoom(this.roomName);
      }//this.router.navigate(["/chat"]);
-     this.apollo.mutate({mutation: this.addBook,
+     this.apollo.mutate({mutation: this.updateBook,
       variables: {
       currentRoom: this.roomName
       }}).subscribe(({ data }) => {this.router.navigate(["/chat"]);
