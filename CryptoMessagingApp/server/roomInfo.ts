@@ -16,4 +16,4 @@ roomUse():string{
       return this.roomNames;//list all rooms by looping through
      } 
    }
-}
+}//npm start ,yarn relay:devnet and sudo npm serve

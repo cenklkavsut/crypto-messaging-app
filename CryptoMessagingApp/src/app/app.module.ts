@@ -14,7 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {  ReactiveFormsModule } from '@angular/forms';
+import {  ReactiveFormsModule } from '@angular/forms';//
 
 @NgModule({
   declarations: [
@@ -41,13 +41,13 @@ import {  ReactiveFormsModule } from '@angular/forms';
 })
 
 export class AppModule {
-  
+  //the constructor connects to graphql
   constructor(
     apollo: Apollo,
     httpLink: HttpLink
   ) {
      apollo.create({
-      link: httpLink.create({ uri: 'http://localhost:3000/graphql'}),
+      link: httpLink.create({ uri: 'http://localhost:3000/graphql'}),//this url is what sends the data
       cache: new InMemoryCache()
     });
 
