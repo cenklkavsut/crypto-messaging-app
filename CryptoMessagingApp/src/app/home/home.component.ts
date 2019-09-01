@@ -26,7 +26,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
     this.roomLists(); 
   } //add in the constructor an auto load option and add user name and servers in the server
    //rooms:roominfo = new roominfo();
-   
+
   join():void{     
     for (var i = 0; i < this.roomList.length; i++) 
     {
@@ -34,7 +34,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
      i+=1;
      //add the selected room
      //this.rooms.addRoom(this.roomName);
-     }    //this.router.navigate(["/chat"]);
+     }//this.router.navigate(["/chat"]);
      this.apollo.mutate({mutation: this.addBook,
       variables: {
       currentRoom: this.roomName
