@@ -31,7 +31,11 @@ messageArray=new Array<string>();//this array needs to send to the ark core bloc
 message=this.messageText;
 passPhrase:string='passphrase';//is needed to send messages.also it is the password you use to sign your wallet
 signed = null;
-
+updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+  updateBook(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+  _id
+  currentRoom
+  }}`;
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo)
 {
 // RAZVAN: look at the developer console output to inspect the contents of the crypto toolset
