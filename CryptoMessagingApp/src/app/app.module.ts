@@ -14,7 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {  ReactiveFormsModule } from '@angular/forms';//
+import {ReactiveFormsModule} from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -32,9 +32,7 @@ import {  ReactiveFormsModule } from '@angular/forms';//
     ApolloModule,
     HttpLinkModule,
     BrowserAnimationsModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

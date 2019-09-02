@@ -9,23 +9,14 @@
       </head>
       <body>
           <div class="container">   
-              <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>    
-              
+              <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>                
             <form class="form-signin">
                 <div class='flex flex-column'>
-                  <input
-                    [(ngModel)]="username"
-                   input type="text" class="form-control"
-                    placeholder="Your username">
-                  <input
-                    [(ngModel)]="password"
-                    type="password" class="form-control"
-                    placeholder="Password">                  
+                  <input type="text" [(ngModel)]="username"  class="form-control"placeholder="Your username"required>
+                  <input type="password" [(ngModel)]="password" class="form-control" placeholder="password"required>                  
                     <input
-                    *ngIf="!login" 
-                    [(ngModel)]="confpassword"
-                    imput type="password" class="form-control"
-                    placeholder="confirm password">
+                    *ngIf="!login"  
+                    placeholder="confirm password" type="password" [(ngModel)]="passwordConf" class="form-control">
                 </div>
                 <div class='flex mt3'>
                   <div
@@ -45,5 +36,4 @@
           </form>
           </div>
       </body>
-    </div>
-    </div>
+    </div></div>

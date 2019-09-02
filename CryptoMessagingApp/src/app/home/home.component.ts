@@ -11,7 +11,7 @@ import gql from 'graphql-tag';
   
 export class HomeComponent implements OnInit {
 roomName:string;//use this to delete room names
-add:string;
+add:string;//add gets the inputs
 roomList = new Array<string>();//this list contains room names
 logged: boolean = false;
 temp:string="";

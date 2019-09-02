@@ -10,11 +10,11 @@ import gql from 'graphql-tag';
 })
 
 export class LoginComponent implements OnInit {
-  public username: string="";
-  public password: string="";
-  public passwordConf:string="";
+  username: string;   
+  password: string;      
+  passwordConf:string;
   conf: boolean = true;
-  public temp: string="";//this is for adding empty data when started
+  temp: string="";//this is for adding empty data when started
   login: boolean = true;//switch between Login and SignUp
   counter:number=0;
 /*addBooks = gql`mutation {
@@ -37,28 +37,27 @@ username
 password
 }}`;
 
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) { }
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
 
 signIn():void{
   try {
-if(/**/this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
+if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
 this.apollo.mutate({mutation: this.checkBook,
  variables: {
  username: this.username,password:this.password
  }}).subscribe(({ data }) => {alert('Welcome!');this.router.navigate(["/home"]);
  },(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
 }
-else if(/**/this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false&& this.conf==false){
+else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false&& this.conf==false){
 //this.apollo.mutate({mutation: this.addBooks}).subscribe();
 this.apollo.mutate({ mutation: this.checkBook,
 variables: {
 username: this.username,password:this.password
-}}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login!');this.login=true;
+}}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.username);this.login=true;
 },(error) => {alert('there was an error maybe the username already exists '+ error);});//this creates the account in the database and forwads to login
 }
-} catch (error) { }
-if(this.counter==2){this.conf=false;}else{this.counter=this.counter+1;}//this allows to get rid of the first time
+} catch (error) { }alert("Empty values! "+this.username+" "+this.password+" "+this.passwordConf);
+if(this.counter==2){this.conf=false;this.counter=0;}else{this.counter=this.counter+1;}//this allows to get rid of the first time
 }
-
 ngOnInit() {}
 }
