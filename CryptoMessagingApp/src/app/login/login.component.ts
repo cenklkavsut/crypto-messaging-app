@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -10,9 +11,9 @@ import gql from 'graphql-tag';
 })
 
 export class LoginComponent implements OnInit {
-  username: string;   
-  password: string;      
-  passwordConf:string;
+  username: string;//does not recieve from ngModel   
+  password: string;//does not recieve from ngModel       
+  passwordConf:string;//does not recieve from ngModel  
   conf: boolean = true;
   temp: string="";//this is for adding empty data when started
   login: boolean = true;//switch between Login and SignUp
@@ -40,24 +41,29 @@ password
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
 
 signIn():void{
-  try {
+try {
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
+
 this.apollo.mutate({mutation: this.checkBook,
  variables: {
  username: this.username,password:this.password
  }}).subscribe(({ data }) => {alert('Welcome!');this.router.navigate(["/home"]);
  },(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
+
 }
-else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false&& this.conf==false){
+else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
 //this.apollo.mutate({mutation: this.addBooks}).subscribe();
-this.apollo.mutate({ mutation: this.checkBook,
+//this creates the account in the database and forwads to login
+this.apollo.mutate({ mutation: this.addBook,
 variables: {
 username: this.username,password:this.password
 }}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.username);this.login=true;
-},(error) => {alert('there was an error maybe the username already exists '+ error);});//this creates the account in the database and forwads to login
+},(error) => {alert('there was an error maybe the username already exists '+ error);});
+
 }
 } catch (error) { }alert("Empty values! "+this.username+" "+this.password+" "+this.passwordConf);
-if(this.counter==2){this.conf=false;this.counter=0;}else{this.counter=this.counter+1;}//this allows to get rid of the first time
+if(this.counter==1){this.conf=false;this.counter=0;}else{this.counter=this.counter+1;}//this allows to get rid of the first time
 }
+
 ngOnInit() {}
 }

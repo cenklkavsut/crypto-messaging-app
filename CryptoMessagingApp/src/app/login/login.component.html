@@ -12,11 +12,11 @@
               <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>                
             <form class="form-signin">
                 <div class='flex flex-column'>
-                  <input type="text" [(ngModel)]="username"  class="form-control"placeholder="Your username"required>
-                  <input type="password" [(ngModel)]="password" class="form-control" placeholder="password"required>                  
+                  <input type="text" ngModel [ngModelOptions]="{name:'username'}"  [(ngModel)]="username" class="form-control"placeholder="Your username"required>
+                  <input type="password" ngModel [ngModelOptions]="{name:'password'}"   [(ngModel)]="password" class="form-control" placeholder="password"required>                  
                     <input
                     *ngIf="!login"  
-                    placeholder="confirm password" type="password" [(ngModel)]="passwordConf" class="form-control">
+                    placeholder="confirm password" type="password" ngModel [ngModelOptions]="{name:'passwordConf'}" [(ngModel)]="passwordConf" class="form-control">
                 </div>
                 <div class='flex mt3'>
                   <div

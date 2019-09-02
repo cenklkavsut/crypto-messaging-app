@@ -32,7 +32,7 @@ import {ReactiveFormsModule} from '@angular/forms'
     ApolloModule,
     HttpLinkModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
