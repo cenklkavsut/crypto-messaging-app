@@ -1,8 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Query } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +23,6 @@ export class LoginComponent implements OnInit {
     username
     password
  }}`;*/
-
 addBook = gql`mutation addBook($username:String!,$password:String!) {
 addBook(username:$username,password:$password) {
 _id
@@ -32,38 +30,50 @@ username
 password
 }}`;
 
-checkBook = gql`mutation addBook($username:String!,$password:String!) {
-addBook(username:$username,password:$password) {
-username
-password
-}}`;
-
+checkUser = gql`
+  query FeedSearchQuery($username: String!,$password: String!) {
+    feed(username: $username,password: $password) {
+        _id
+        username
+        password
+        }
+    }
+`;
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
 
 signIn():void{
-try {
+try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
-
-this.apollo.mutate({mutation: this.checkBook,
- variables: {
- username: this.username,password:this.password
- }}).subscribe(({ data }) => {alert('Welcome!');this.router.navigate(["/home"]);
- },(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
-
+//this.apollo.mutate({mutation: this.checkUser}).subscribe();
+  
+this.apollo.mutate({//make a query to check if exists 
+    mutation: this.checkUser,
+    variables: {
+      username: this.username,
+      password: this.password
+    }
+  }).subscribe(({ data }) => {alert('Welcome!');this.router.navigate(["/home"]);
+},(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
+  alert("Values "+this.username+" "+this.password+" ");
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
-//this.apollo.mutate({mutation: this.addBooks}).subscribe();
-//this creates the account in the database and forwads to login
-this.apollo.mutate({ mutation: this.addBook,
+
+this.apollo.mutate({ mutation: this.addBook,//this creates the account in the database and forwads to login
 variables: {
 username: this.username,password:this.password
-}}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.username);this.login=true;
-},(error) => {alert('there was an error maybe the username already exists '+ error);});
+}}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.username);
+this.login=true;this.passwordConf="";},(error) => {alert('there was an error maybe the username already exists '+ error);});
 
 }
-} catch (error) { }alert("Empty values! "+this.username+" "+this.password+" "+this.passwordConf);
-if(this.counter==1){this.conf=false;this.counter=0;}else{this.counter=this.counter+1;}//this allows to get rid of the first time
-}
+}catch (error) { }
+if(this.counter==1){this.conf=false;this.counter=0;}
+else{this.counter=this.counter+1;}//this allows to get rid of the first time
+}//add to if statments one checks if exist and the other one does somthing with the boolean returned to check the result
 
 ngOnInit() {}
 }
+/*this.apollo.mutate({ mutation: this.addBook,//this creates the account in the database and forwads to login
+  variables: {
+  username: this.username,password:this.password
+  }}).subscribe(({ data }) => {exist=true;},(error) => {exist=false;});
+ */
