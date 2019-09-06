@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
     username
     password
  }}`;*/
+
 addBook = gql`mutation addBook($username:String!,$password:String!) {
 addBook(username:$username,password:$password) {
 _id
@@ -30,31 +31,27 @@ username
 password
 }}`;
 
-checkUser = gql`
-  query FeedSearchQuery($username: String!,$password: String!) {
-    feed(username: $username,password: $password) {
-        _id
-        username
-        password
-        }
-    }
-`;
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
+ checkLogin = gql`
+ mutation LoginMutation($username:String!,$password:String!){
+  login(username:$username,password:$password) {
+     token
+   }
+ }`;
 
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
+//this.apollo.mutate({mutation: this.checkUser}).subscribe();/*)subscribe(({ data }) => {login=true;},(error) => {login=false;});*/
 signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
-//this.apollo.mutate({mutation: this.checkUser}).subscribe();
-  
+
 this.apollo.mutate({//make a query to check if exists 
-    mutation: this.checkUser,
+    mutation: this.checkLogin,
     variables: {
       username: this.username,
-      password: this.password
-    }
-  }).subscribe(({ data }) => {alert('Welcome!');this.router.navigate(["/home"]);
-},(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
-  alert("Values "+this.username+" "+this.password+" ");
+    }}).subscribe(({ data })=> {alert('Welcome!');this.router.navigate(["/home"]);}
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
+
+ alert("Values "+this.username+" "+this.password+" ");
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
 
@@ -72,8 +69,3 @@ else{this.counter=this.counter+1;}//this allows to get rid of the first time
 
 ngOnInit() {}
 }
-/*this.apollo.mutate({ mutation: this.addBook,//this creates the account in the database and forwads to login
-  variables: {
-  username: this.username,password:this.password
-  }}).subscribe(({ data }) => {exist=true;},(error) => {exist=false;});
- */
