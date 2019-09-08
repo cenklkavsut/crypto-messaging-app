@@ -16,4 +16,4 @@ roomUse():string{
       return this.roomNames;//list all rooms by looping through
      } 
    }//basicly it needs a room query that canbe used together with user
-}//npm start ,yarn relay:devnet and sudo npm serve
+}//yarn relay:devnet and sudo npm serve,the server requires mongodb and monogoose to be installed and can be runned through npm start

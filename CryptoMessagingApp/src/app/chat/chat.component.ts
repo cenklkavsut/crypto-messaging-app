@@ -34,7 +34,6 @@ signed = null;
 updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   updateBook(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
   _id
-  currentRoom
   }}`;
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo)
 {
@@ -98,7 +97,12 @@ async sendMessage(){//allows for sending message
 }*/
 confirm(){//allows to comfirm
   if(this.recipientId!=''&&this.SenderId!=''&&this.SenderId!=''){
-  alert("information has been selected");
+  this.apollo.mutate({//make a query to check if exists 
+    mutation: this.updateRoom,
+    variables: {
+      currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
+    }}).subscribe(({ data })=> {alert("information has been selected!");}
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
   }
   else{
     alert("Empty or incorect information!");

@@ -42,15 +42,11 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
     {
      this.roomName=this.roomList[i];
      i+=1;
-     //add the selected room
-     //this.rooms.addRoom(this.roomName);
+     //add the selected room//this.rooms.addRoom(this.roomName);
+     this.router.navigate(["/chat"]);
      }//this.router.navigate(["/chat"]);
-     this.apollo.mutate({ mutation: this.updateRoom,
-      variables: {
-        currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-      }}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.roomName);
-      },(error) => {alert('there was an error maybe the username already exists '+ error);});    
     }
+    
   roomLists():string{
      for (var i = 0; i < this.roomList.length; i++) 
      {
@@ -63,12 +59,12 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
 create():void{
   this.roomName=this.add;
   this.roomList.push(this.roomName);
-  alert('Room created!'); 
+ 
   this.add='';//this.roomList.push(this.apollo.watchQuery({query:this.checkRoom}).toString());
   this.apollo.mutate({mutation: this.addRoom,
     variables: {
       currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-    }}).subscribe(({ data }) => {},(error) => {alert('there was an error sending the query '+ error);});    
+    }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('there was an error sending the query '+ error);});    
 }//this adds a room name to the list
 
 delete():void{this.roomName=this.add;

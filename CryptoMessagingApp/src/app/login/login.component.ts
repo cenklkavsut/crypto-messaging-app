@@ -31,10 +31,11 @@ username
 password
 }}`;
 
- checkLogin = gql`
- mutation LoginMutation($username:String!,$password:String!){
-  login(username:$username,password:$password) {
-     token
+checkLogin = gql`
+ mutation loginBook($username:String!,$password:String!){
+  loginBook(username:$username,password:$password) {
+     _id
+     username
    }
  }`;
 
@@ -44,10 +45,10 @@ signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
 
-this.apollo.mutate({//make a query to check if exists 
+  this.apollo.mutate({// this should be a query that checks if exist of not 
     mutation: this.checkLogin,
     variables: {
-      username: this.username,
+      username: this.username,password: this.password
     }}).subscribe(({ data })=> {alert('Welcome!');this.router.navigate(["/home"]);}
   ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
 
@@ -62,7 +63,8 @@ username: this.username,password:this.password
 this.login=true;this.passwordConf="";},(error) => {alert('there was an error maybe the username already exists '+ error);});
 
 }
-}catch (error) { }
+}
+catch (error) { }
 if(this.counter==1){this.conf=false;this.counter=0;}
 else{this.counter=this.counter+1;}//this allows to get rid of the first time
 }//add to if statments one checks if exist and the other one does somthing with the boolean returned to check the result

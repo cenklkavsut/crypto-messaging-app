@@ -33,6 +33,22 @@ app.use('/graphql', cors(), graphqlHTTP({
   schema: schema,
   rootValue: global,
   graphiql: true,
+  context: ({ req }) => {
+    const token = req.headers.authorization || '';
+    // try to retrieve a user with the token
+    const user = getUser(token);  
+    // optionally block the user
+    // we could also check user roles/permissions here
+    if (!user) throw new AuthenticationError('you must be logged in');    
+    // add the user to the context
+    //return { user }; 
+    return {
+      user,
+      models: {
+        User: generateUserModel({ user })
+      }
+    };
+  }, 
 }));
 
 // catch 404 and forward to error handler

@@ -5,10 +5,9 @@ var GraphQLObjectType = require('graphql').GraphQLObjectType;
 var GraphQLNonNull = require('graphql').GraphQLNonNull;
 var GraphQLID = require('graphql').GraphQLID;
 var GraphQLString = require('graphql').GraphQLString;
-var GraphQLInt = require('graphql').GraphQLInt;
-//var GraphQLDate = require('graphql-date');
+var GraphQLInt = require('graphql').GraphQLInt;//var GraphQLDate = require('graphql-date');
 var BookModel = require('../models/Book');
-var roomModel = require('../models/room');
+var roomModel = require('../models/room');//var AuthService = require('../models/auth')
 
  var bookType = new GraphQLObjectType({
     name: 'book',
@@ -224,8 +223,23 @@ var queryType = new GraphQLObjectType({
             }
             return remRoom;
           }
-        }
+        },loginBook: {
+          type: bookType,
+          args: {
+            username: {
+                type: new GraphQLNonNull(GraphQLString)
+              },
+              password: {
+                type: new GraphQLNonNull(GraphQLString)
+              }
+          },
+          resolve(params,parent, args, context) {
+            if (!context.book) {return null;}
+            return context.models.User.getById(params.id); //else if(params.book){return [username&&password];}       
+           }                      
+        }       
       }
     }
-  });  
+  });
+
 module.exports = new GraphQLSchema({query: queryType, mutation: mutation});
