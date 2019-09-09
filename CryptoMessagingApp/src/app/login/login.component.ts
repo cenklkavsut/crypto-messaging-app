@@ -17,12 +17,6 @@ export class LoginComponent implements OnInit {
   temp: string="";//this is for adding empty data when started
   login: boolean = true;//switch between Login and SignUp
   counter:number=0;
-/*addBooks = gql`mutation {
-  addBook(username: "", password: "", sender: "", recipient: "", currentRoom: "", passpharse: "") {
-    _id
-    username
-    password
- }}`;*/
 
 addBook = gql`mutation addBook($username:String!,$password:String!) {
 addBook(username:$username,password:$password) {
@@ -36,10 +30,9 @@ checkLogin = gql`
   loginBook(username:$username,password:$password) {
      _id
    }
- }`;
+ }`;//the database requires the completion of the database for Authentication.
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
-//this.apollo.mutate({mutation: this.checkUser}).subscribe();/*)subscribe(({ data }) => {login=true;},(error) => {login=false;});*/
 signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
@@ -51,7 +44,6 @@ if(this.username!=null&& this.password!=null && this.login==true&& this.conf==fa
     }}).subscribe(({ data })=> {alert('Welcome!');this.router.navigate(["/home"]);}
   ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
 
- alert("Values "+this.username+" "+this.password+" ");
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
 
