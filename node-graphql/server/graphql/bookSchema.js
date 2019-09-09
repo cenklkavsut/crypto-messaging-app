@@ -223,7 +223,8 @@ var queryType = new GraphQLObjectType({
             }
             return remRoom;
           }
-        },loginBook: {
+        },
+        loginBook: {
           type: bookType,
           args: {
             username: {
@@ -233,11 +234,12 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },
-          resolve(params,parent, args, context) {
-            if (!context.book) {return null;}
-            return context.models.User.getById(params.id); //else if(params.book){return [username&&password];}       
-           }                      
-        }       
+          resolve( root, params, context,{ username, password }) {
+            if (!context.BookModel|| !context.BookModel.find(username&&password).exec()) 
+            return null;
+            return context.models.BookModel.getAll();//this needs adjustment to allow exact login
+          }                 
+        }
       }
     }
   });
