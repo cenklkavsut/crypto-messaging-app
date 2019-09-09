@@ -43,9 +43,8 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
     }
   }`;
 
-  checkCurrentRoom = gql`
-  {
-  rooms{
+  checkCurrentRoom = gql`{
+  rooms(limit: 10){
   currentRoom
     }
   }`;
@@ -71,15 +70,12 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {} 
 
   join():void{     
-    for (var i = 0; i < this.roomList.length; i++) 
-    {
-     this.roomName=this.roomList[i];
-     i+=1;
-         
+    const index = this.roomList.indexOf(this.roomName);
+     this.roomName=this.roomList[index];           
      this.apollo.mutate({mutation: this.updateRoom,
       variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-      }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); },(error) => {alert('room not selected '+ error);});        
-    }   
+      }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
+      ,(error) => {alert('room not selected '+ error);});          
     }
     
   roomLists():string{
