@@ -233,7 +233,7 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },
-          resolve( root, params, context,{ username, password }) {
+          resolve( root, params, context) {
             if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
             return context.BookModel.getAll();//this needs adjustment based to check if exists          
           }                 

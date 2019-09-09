@@ -33,14 +33,10 @@ app.use('/graphql', cors(), graphqlHTTP({
   schema: schema,
   rootValue: global,
   graphiql: true,
-  context: ({ req }) => {
+  context: ({ req }) => {//try to retrieve a user with the token
     const token = req.headers.authorization || '';
-    // try to retrieve a user with the token
-    const loginBook = getUser(token);  
-    // optionally block the user
-    // we could also check user roles/permissions here
+    const loginBook = getUser(token);
     if (!loginBook) throw new AuthenticationError('you must be logged in');    
-    // add the user to the context
     return {loginBook,models: {loginBook: generateUserModel({ loginBook }),}}//{ loginBook };
   }, 
 }));

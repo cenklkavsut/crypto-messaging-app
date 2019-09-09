@@ -68,21 +68,18 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
     }
   }`;
   
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {
- // this.id=this.apollo.watchQuery({query: this.checkCurrentRoom}); this.roomList.push(this.id.toString());
-} 
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {} 
 
   join():void{     
     for (var i = 0; i < this.roomList.length; i++) 
     {
      this.roomName=this.roomList[i];
      i+=1;
-     this.router.navigate(["/chat"]);
-     }
+         
      this.apollo.mutate({mutation: this.updateRoom,
-      variables: {
-        currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-      }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('there was an error sending the query '+ error);});   
+      variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+      }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); },(error) => {alert('room not selected '+ error);});        
+    }   
     }
     
   roomLists():string{
@@ -97,10 +94,9 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
 create():void{
   this.roomName=this.add;
   this.roomList.push(this.roomName);
-  this.add='';//this.roomList.push(this.apollo.watchQuery({query:this.checkRoom}).toString());
+  this.add='';
     this.apollo.mutate({mutation: this.addRoom,
-    variables: {
-    currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+    variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
     }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
 }//this adds a room name to the list
 
@@ -111,13 +107,13 @@ delete():void{
     this.roomList.splice(index, 1);  
      alert('Room deleted!');
      this.add='';
-   }
-   else{
-    alert('Room deletion error!'); 
+   } else{ 
+     this.roomList.splice(index, 1);  
+     alert('Room deletion error!');    
   } 
 }
    logout():void{
-    this.apollo.getClient().resetStore();//
+    this.apollo.getClient().resetStore();
     this.router.navigate(["/login"]);//here update room name with empty
   }
 
