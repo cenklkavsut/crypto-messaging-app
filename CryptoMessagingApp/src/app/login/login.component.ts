@@ -35,7 +35,6 @@ checkLogin = gql`
  mutation loginBook($username:String!,$password:String!){
   loginBook(username:$username,password:$password) {
      _id
-     username
    }
  }`;
 
@@ -63,8 +62,7 @@ username: this.username,password:this.password
 this.login=true;this.passwordConf="";},(error) => {alert('there was an error maybe the username already exists '+ error);});
 
 }
-}
-catch (error) { }
+}catch (error) { }
 if(this.counter==1){this.conf=false;this.counter=0;}
 else{this.counter=this.counter+1;}//this allows to get rid of the first time
 }//add to if statments one checks if exist and the other one does somthing with the boolean returned to check the result

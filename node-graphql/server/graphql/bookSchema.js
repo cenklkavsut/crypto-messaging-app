@@ -223,8 +223,7 @@ var queryType = new GraphQLObjectType({
             }
             return remRoom;
           }
-        },
-        loginBook: {
+        },loginBook: {
           type: bookType,
           args: {
             username: {
@@ -235,9 +234,8 @@ var queryType = new GraphQLObjectType({
               }
           },
           resolve( root, params, context,{ username, password }) {
-            if (!context.BookModel|| !context.BookModel.find(username&&password).exec()) 
-            return null;
-            return context.models.BookModel.getAll();//this needs adjustment to allow exact login
+            if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
+            return context.BookModel.getAll();//this needs adjustment based to check if exists          
           }                 
         }
       }
