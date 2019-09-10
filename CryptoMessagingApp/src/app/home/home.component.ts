@@ -45,9 +45,7 @@ temp:string="";
     }}`;
   //
 
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {   
-  //const name=this.apollo.query({query: this.checkQuery});this.roomList.push(name.forEach.toString());  
-}
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
   join():void{     
   const index = this.roomList.indexOf(this.roomName);
@@ -86,7 +84,7 @@ delete():void{
     else{ 
      //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
-  } 
+  }
 }
    logout():void{
     this.apollo.getClient().resetStore();
