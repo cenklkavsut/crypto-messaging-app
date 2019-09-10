@@ -38,13 +38,6 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
     }
   }`;
 
-  full = gql`
-  {
-    rooms{
-  currentRoom
-    }
-  }`;
-
  removeRoom = gql`
   mutation removeRoom($id: String!) {
     removeBook(id:$id) {
@@ -56,7 +49,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
   //const name=this.apollo.watchQuery({query: this.full});
   //this.roomName=name.toString().toString();
   //this.roomList.push(this.roomName);  
-} 
+}
 
   join():void{     
   const index = this.roomList.indexOf(this.roomName);
@@ -65,9 +58,9 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
   }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
   ,(error) => {alert('room not selected '+ error);});          
-  }
+  }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
     
-  roomLists():string{
+  roomLists():string{//return a string room
      for (var i = 0; i < this.roomList.length; i++) 
      {
       this.roomName=this.roomList[i];i+=1;
@@ -91,7 +84,8 @@ delete():void{
     this.roomList.splice(index, 1);  
      alert('Room deleted!');
      this.add='';      
-    }else{ 
+    }
+    else{ 
      //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
   } 
