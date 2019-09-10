@@ -11,44 +11,42 @@ import gql from 'graphql-tag';
   
 export class HomeComponent implements OnInit {
 roomName:string;//use this to delete room names
-add:string;//add gets the inputs//ngModel [ngModelOptions]="{name:'username'}"
+add:string;//add gets the inputs
 roomList = new Array<string>();//this list contains room names
 logged: boolean = false;
 temp:string="";
  ids:any;
- 
-updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-  updateRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-  _id
-  currentRoom
-  recipient
-  sender
-  passphrase
-  }}`;
-//if room doesn't exist add room and if room is choosen update currentRoom and make the rest empty 
- addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+
+//this adds a room to the database
+  addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   addroom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     _id
   }}`;
-
+  
+  //
+  updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+    updateRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+    _id
+    currentRoom
+    recipient
+    sender
+    passphrase
+    }}`;
   checkQuery = gql`
-  query room($id: String!) {
-    room(id: $id) {
-      _id
+  query{
+  rooms{
+  currentRoom
     }
   }`;
-
  removeRoom = gql`
   mutation removeRoom($id: String!) {
     removeBook(id:$id) {
       _id
-    }
-  }`;
-  
+    }}`;
+  //
+
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {   
-  //const name=this.apollo.watchQuery({query: this.full});
-  //this.roomName=name.toString().toString();
-  //this.roomList.push(this.roomName);  
+  //const name=this.apollo.query({query: this.checkQuery});this.roomList.push(name.forEach.toString());  
 }
 
   join():void{     
@@ -75,7 +73,7 @@ create():void{
     this.apollo.mutate({mutation: this.addRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
     }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
-}//this adds a room name to the list
+}
 
 delete():void{
   this.roomName=this.add;
