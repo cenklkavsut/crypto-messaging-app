@@ -15,7 +15,6 @@ add:string;//add gets the inputs
 roomList = new Array<string>();//this list contains room names
 logged: boolean = false;
 temp:string="";
- ids:any;
 
 //this adds a room to the database
   addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
@@ -24,20 +23,15 @@ temp:string="";
   }}`;
   
   //
-  updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-    updateRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-    _id
+  updateRoom = gql`mutation updateRooms($currentRoom:String!) {
+    updateRooms(currentRoom:$currentRoom) {
     currentRoom
-    recipient
-    sender
-    passphrase
     }}`;
   checkQuery = gql`
   query{
   rooms{
   currentRoom
-    }
-  }`;
+    }}`;
  removeRoom = gql`
   mutation removeRoom($id: String!) {
     removeBook(id:$id) {
@@ -47,11 +41,11 @@ temp:string="";
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
-  join():void{     
+  join():void{ 
   const index = this.roomList.indexOf(this.roomName);
-  this.roomName=this.roomList[index];           
+  this.roomName=this.roomList[index];//this.router.navigate(["/chat"]);           
   this.apollo.mutate({mutation: this.updateRoom,
-  variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+  variables: {currentRoom:this.roomName
   }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
   ,(error) => {alert('room not selected '+ error);});          
   }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
@@ -86,6 +80,7 @@ delete():void{
      alert('Room deletion error!');    
   }
 }
+
    logout():void{
     this.apollo.getClient().resetStore();
     this.router.navigate(["/login"]);//here update room name with empty

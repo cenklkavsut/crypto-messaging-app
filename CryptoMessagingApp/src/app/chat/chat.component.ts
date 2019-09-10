@@ -31,10 +31,14 @@ messageArray=new Array<string>();//this array needs to send to the ark core bloc
 message=this.messageText;
 passPhrase:string='passphrase';//is needed to send messages.also it is the password you use to sign your wallet
 signed = null;
-updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-  updateBook(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-  _id
+updateRoom = gql`mutation updateRoomX($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+  updateRoomX(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+    currentRoom
+    recipient
+    sender
+    passphrase
   }}`;
+
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo)
 {
 // RAZVAN: look at the developer console output to inspect the contents of the crypto toolset
@@ -85,29 +89,25 @@ async sendMessage(){//allows for sending message
 }
 
 /*async recieveMessage(){ //the client to recieve message/transaction
- try {
-    const response = await client.resource("transactions").all({
+ try {const response = await client.resource("transactions").all({
       senderId: this.SenderId,//this recieves message from wallet and takes sender from user
       orderBy: "timestamp.epoch"
-    });
-    return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
+    });return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
   } catch (e) {console.log(e);
   this.messageArray.push(this.messageContainer);//push the message in the array to be displayed
-}
-}*/
+}}*/
+
 confirm(){//allows to comfirm
   if(this.recipientId!=''&&this.SenderId!=''&&this.SenderId!=''){
-  this.apollo.mutate({//make a query to check if exists 
-    mutation: this.updateRoom,
-    variables: {
+  /*this.apollo.mutate({//make a query to check if exists 
+    mutation: this.updateRoom,variables: {
       currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
     }}).subscribe(({ data })=> {alert("information has been selected!");}
-  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
-  }
-  else{
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home*/
+  }else{
     alert("Empty or incorect information!");
   }
-}/**/
+}
 
 ngOnInit() {}
-}//add transaction to the api pool
+}//add transaction to the api pool        

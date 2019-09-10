@@ -47,7 +47,7 @@ var roomModel = require('../models/room');//var AuthService = require('../models
         },
       }
     }
-  });
+  }); 
   
 var queryType = new GraphQLObjectType({
     name: 'Query',
@@ -190,6 +190,29 @@ var queryType = new GraphQLObjectType({
           },
           resolve(root, params) {
             return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              if (err) return next(err);
+            });
+          }
+        },updateRooms: {
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+          },
+          resolve(root, params) {
+            return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
+              if (err) return next(err);
+            });
+          }
+        },updateRoomX: {
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve(root, params) {
+            return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
               if (err) return next(err);
             });
           }
