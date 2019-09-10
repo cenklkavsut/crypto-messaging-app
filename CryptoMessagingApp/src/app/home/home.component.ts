@@ -15,7 +15,7 @@ add:string;//add gets the inputs//ngModel [ngModelOptions]="{name:'username'}"
 roomList = new Array<string>();//this list contains room names
 logged: boolean = false;
 temp:string="";
- id:any;
+ ids:any;
  
 updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   updateRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
@@ -25,38 +25,23 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
   sender
   passphrase
   }}`;
-
 //if room doesn't exist add room and if room is choosen update currentRoom and make the rest empty 
  addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   addroom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     _id
   }}`;
 
-  checkRoom = gql`
-  query room($id: String) {
+  checkQuery = gql`
+  query room($id: String!) {
     room(id: $id) {
       _id
-      currentRoom
-      recipient
-      sender
-      passphrase
     }
   }`;
 
-  checkCurrentRoom = gql`{
-  rooms(limit: 10){
+  full = gql`
+  {
+    rooms{
   currentRoom
-    }
-  }`;
-
-  checkQuery = gql`
-  query room($id: String,$currentRoom: String) {
-    room(id: $id,currentRoom: $currentRoom) {
-      _id
-      currentRoom
-      recipient
-      sender
-      passphrase
     }
   }`;
 
@@ -67,22 +52,25 @@ updateRoom = gql`mutation updateRoom($currentRoom:String!,$recipient:String!,$se
     }
   }`;
   
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {} 
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {   
+  //const name=this.apollo.watchQuery({query: this.full});
+  //this.roomName=name.toString().toString();
+  //this.roomList.push(this.roomName);  
+} 
 
   join():void{     
-    const index = this.roomList.indexOf(this.roomName);
-     this.roomName=this.roomList[index];           
-     this.apollo.mutate({mutation: this.updateRoom,
-      variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-      }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
-      ,(error) => {alert('room not selected '+ error);});          
-    }
+  const index = this.roomList.indexOf(this.roomName);
+  this.roomName=this.roomList[index];           
+  this.apollo.mutate({mutation: this.updateRoom,
+  variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+  }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
+  ,(error) => {alert('room not selected '+ error);});          
+  }
     
   roomLists():string{
      for (var i = 0; i < this.roomList.length; i++) 
      {
-      this.roomName=this.roomList[i];
-      i+=1;
+      this.roomName=this.roomList[i];i+=1;
        return this.roomName;
       } 
     }
@@ -102,9 +90,9 @@ delete():void{
   if (index != -1) {
     this.roomList.splice(index, 1);  
      alert('Room deleted!');
-     this.add='';
-   } else{ 
-     this.roomList.splice(index, 1);  
+     this.add='';      
+    }else{ 
+     //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
   } 
 }

@@ -55,7 +55,7 @@ this.login=true;this.passwordConf="";},(error) => {alert('there was an error may
 
 }
 }catch (error) { }
-if(this.counter==1){this.conf=false;this.counter=0;}
+if(this.counter==1){this.conf=false;this.counter=0;}//
 else{this.counter=this.counter+1;}//this allows to get rid of the first time
 }//add to if statments one checks if exist and the other one does somthing with the boolean returned to check the result
 
