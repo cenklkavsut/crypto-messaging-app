@@ -23,15 +23,17 @@ temp:string="";
   }}`;
   
   //
-  updateRoom = gql`mutation updateRooms($currentRoom:String!) {
-    updateRooms(currentRoom:$currentRoom) {
+  updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+    updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
     }}`;
+
   checkQuery = gql`
   query{
   rooms{
   currentRoom
     }}`;
+
  removeRoom = gql`
   mutation removeRoom($id: String!) {
     removeBook(id:$id) {
@@ -41,12 +43,16 @@ temp:string="";
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
-  join():void{this.roomName=this.add;
+  join():void{
+  this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
-  this.roomName=this.roomList[index];//this.router.navigate(["/chat"]);           
-  this.apollo.mutate({mutation: this.updateRoom,variables: {currentRoom:this.roomName
+  this.roomName=this.roomList[index]; 
+
+  this.apollo.mutate({mutation: this.updateRoom,variables: {
+  currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
   }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
-  ,(error) => {alert('room not selected '+ error);});          
+  ,(error) => {alert('room not selected '+ error);});
+
   }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
     
   roomLists():string{//return a string room
@@ -66,15 +72,13 @@ create():void{
     }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
 }
 
-delete():void{
-  this.roomName=this.add;
+delete():void{this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
   if (index != -1) {
     this.roomList.splice(index, 1);  
      alert('Room deleted!');
-     this.add='';      
-    }
-    else{ 
+     this.add='';     
+    }else{ 
      //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
   }

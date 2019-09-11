@@ -193,32 +193,7 @@ var queryType = new GraphQLObjectType({
               if (err) return next(err);
             });
           }
-        },
-        updateRooms: {
-          type: roomType,
-          args: {
-            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
-          },
-          resolve(root, params) {
-            return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
-              if (err) return next(err);
-            }).exec();
-          }
-        },updateRoomX: {
-          type: roomType,
-          args: {
-            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
-            recipient: { type: new GraphQLNonNull(GraphQLString) },
-            sender: { type: new GraphQLNonNull(GraphQLString) },
-            passphrase: { type: new GraphQLNonNull(GraphQLString) }
-          },
-          resolve(root, params) {
-            return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
-              if (err) return next(err);
-            }).exec();
-          }
-        },
-        removeBook: {
+        },removeBook: {
           type: bookType,
           args: {
             id: {
@@ -247,7 +222,8 @@ var queryType = new GraphQLObjectType({
             }
             return remRoom;
           }
-        },loginBook: {
+        },
+        loginBook: {
           type: bookType,
           args: {
             username: {
@@ -261,6 +237,54 @@ var queryType = new GraphQLObjectType({
             if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
             return context.BookModel.getAll();//this needs adjustment based to check if exists          
           }                 
+        },
+        updateRooms: {
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve(root, params) {
+          return roomModel.findOne(
+            { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}
+            , function (err) {
+          if (err) return next(err);
+           }).exec();
+          }
+        },
+        fetchRoom: {
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve(root, params) {
+          return roomModel.findOne(
+            { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}
+            , function (err) {
+          if (err) return next(err);
+           }).exec();
+          }
+        },
+        fetchUser: {
+          type: roomType,
+          args: {
+            username: {
+              type: new GraphQLNonNull(GraphQLString)
+            },
+            password: {
+              type: new GraphQLNonNull(GraphQLString)
+            }
+          },
+          resolve(root, params) {
+          return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
+          if (err) return next(err);
+           }).exec();
+          }
         }
       }
     }
