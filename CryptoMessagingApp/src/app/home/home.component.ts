@@ -42,10 +42,9 @@ temp:string="";
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
   join():void{ 
-  const index = this.roomList.indexOf(this.roomName);
+  const index = this.roomList.indexOf(this.add);
   this.roomName=this.roomList[index];//this.router.navigate(["/chat"]);           
-  this.apollo.mutate({mutation: this.updateRoom,
-  variables: {currentRoom:this.roomName
+  this.apollo.mutate({mutation: this.updateRoom,variables: {currentRoom:this.roomName
   }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
   ,(error) => {alert('room not selected '+ error);});          
   }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
