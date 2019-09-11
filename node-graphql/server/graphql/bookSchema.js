@@ -193,7 +193,8 @@ var queryType = new GraphQLObjectType({
               if (err) return next(err);
             });
           }
-        },updateRooms: {
+        },
+        updateRooms: {
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
