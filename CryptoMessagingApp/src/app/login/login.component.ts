@@ -33,13 +33,6 @@ checkLogin = gql`
      _id
    }}`;//the database requires the completion of the database for Authentication.
 
-   fetchLogin = gql`
- mutation fetchUser($username:String!,$password:String!){
-  fetchUser(username:$username,password:$password) {
-     _id
-   }}`;//the database requires the completion of the database for Authentication.
-
-
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
 
 signIn():void{
@@ -47,7 +40,7 @@ try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
 
   this.apollo.mutate({// this should be a query that checks if exist of not 
-  mutation: this.fetchLogin,variables: {username: this.username,password: this.password
+  mutation: this.checkLogin,variables: {username: this.username,password: this.password
   }}).subscribe(({ data })=> {alert('Welcome! '+data);this.router.navigate(["/home"]);}
   ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
 
