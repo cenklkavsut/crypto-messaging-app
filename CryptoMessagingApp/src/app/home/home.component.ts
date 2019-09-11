@@ -41,8 +41,8 @@ temp:string="";
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
-  join():void{ 
-  const index = this.roomList.indexOf(this.add);
+  join():void{this.roomName=this.add;
+  const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index];//this.router.navigate(["/chat"]);           
   this.apollo.mutate({mutation: this.updateRoom,variables: {currentRoom:this.roomName
   }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }

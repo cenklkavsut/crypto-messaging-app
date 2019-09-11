@@ -202,7 +202,7 @@ var queryType = new GraphQLObjectType({
           resolve(root, params) {
             return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
               if (err) return next(err);
-            });
+            }).exec();
           }
         },updateRoomX: {
           type: roomType,
@@ -215,7 +215,7 @@ var queryType = new GraphQLObjectType({
           resolve(root, params) {
             return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
               if (err) return next(err);
-            });
+            }).exec();
           }
         },
         removeBook: {
