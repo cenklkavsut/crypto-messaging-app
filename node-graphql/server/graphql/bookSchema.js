@@ -280,9 +280,13 @@ var queryType = new GraphQLObjectType({
               type: new GraphQLNonNull(GraphQLString)
             }
           },
-          resolve(parentValue, { username, password }, req) {
-            return AuthService.login({ username, password, req });
-          }
+          resolve(root, params) {
+            return bookType.findOne(
+              {username: params.username,password:params.password}
+              , function (err) {
+            if (err) return next(err);
+             }).exec();
+            }
         }
       }
     }
