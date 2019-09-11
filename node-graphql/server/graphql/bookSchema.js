@@ -263,7 +263,7 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-          return roomModel.findOne(
+          return roomModel.filter(
             { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}
             , function (err) {
           if (err) return next(err);
@@ -271,7 +271,7 @@ var queryType = new GraphQLObjectType({
           }
         },
         fetchUser: {
-          type: roomType,
+          type: bookType,
           args: {
             username: {
               type: new GraphQLNonNull(GraphQLString)
@@ -280,10 +280,8 @@ var queryType = new GraphQLObjectType({
               type: new GraphQLNonNull(GraphQLString)
             }
           },
-          resolve(root, params) {
-          return roomModel.findOne({ currentRoom: params.currentRoom}, function (err) {
-          if (err) return next(err);
-           }).exec();
+          resolve(parentValue, { username, password }, req) {
+            return AuthService.login({ username, password, req });
           }
         }
       }

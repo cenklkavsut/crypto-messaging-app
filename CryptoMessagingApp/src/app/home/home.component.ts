@@ -22,7 +22,6 @@ temp:string="";
     _id
   }}`;
   
-  //
   updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
     updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
@@ -39,7 +38,6 @@ temp:string="";
     removeBook(id:$id) {
       _id
     }}`;
-  //
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
@@ -48,20 +46,20 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
   const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index]; 
 
-  this.apollo.mutate({mutation: this.updateRoom,variables: {
-  currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]); }
-  ,(error) => {alert('room not selected '+ error);});
+  this.apollo.mutate({mutation: this.addRoom,
+  variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+  }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]);}
+  ,(error) => {alert('Please enter a room!');});   
 
-  }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
+}//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
     
   roomLists():string{//return a string room
-     for (var i = 0; i < this.roomList.length; i++) 
-     {
+   for (var i = 0; i < this.roomList.length; i++) 
+    {
       this.roomName=this.roomList[i];i+=1;
        return this.roomName;
-      } 
-    }
+    } 
+  }
 
 create():void{
   this.roomName=this.add;

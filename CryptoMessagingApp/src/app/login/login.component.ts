@@ -11,12 +11,14 @@ import gql from 'graphql-tag';
 
 export class LoginComponent implements OnInit {
   username: string;//does not recieve from ngModel   
-  password: string;//does not recieve from ngModel       
+  password: string;//does not recieve from ngModel     
   passwordConf:string;//does not recieve from ngModel  
   conf: boolean = true;
   temp: string="";//this is for adding empty data when started
   login: boolean = true;//switch between Login and SignUp
   counter:number=0;
+  usernameCheck: string;//this allows to recieve data to
+  passwordCheck: string;//this allows to recieve data to        
 
 addBook = gql`mutation addBook($username:String!,$password:String!) {
 addBook(username:$username,password:$password) {
@@ -29,20 +31,25 @@ checkLogin = gql`
  mutation loginBook($username:String!,$password:String!){
   loginBook(username:$username,password:$password) {
      _id
-   }
- }`;//the database requires the completion of the database for Authentication.
+   }}`;//the database requires the completion of the database for Authentication.
+
+   fetchLogin = gql`
+ mutation fetchUser($username:String!,$password:String!){
+  fetchUser(username:$username,password:$password) {
+     _id
+   }}`;//the database requires the completion of the database for Authentication.
+
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
+
 signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
 
   this.apollo.mutate({// this should be a query that checks if exist of not 
-    mutation: this.checkLogin,
-    variables: {
-      username: this.username,password: this.password
-    }}).subscribe(({ data })=> {alert('Welcome!');this.router.navigate(["/home"]);}
-  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home/**/
+  mutation: this.fetchLogin,variables: {username: this.username,password: this.password
+  }}).subscribe(({ data })=> {alert('Welcome! '+data);this.router.navigate(["/home"]);}
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
 
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
