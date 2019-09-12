@@ -31,13 +31,12 @@ messageArray=new Array<string>();//this array needs to send to the ark core bloc
 message=this.messageText;
 passPhrase:string='passphrase';//is needed to send messages.also it is the password you use to sign your wallet
 signed = null;
-updateRoom = gql`mutation updateRoomX($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-  updateRoomX(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+
+  //this updates a room to the database
+  updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+    updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
-    recipient
-    sender
-    passphrase
-  }}`;
+    }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo)
 {

@@ -19,9 +19,9 @@ temp:string="";
 //this adds a room to the database
   addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   addroom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-    _id
+  _id
   }}`;
-  
+  //this updates a room to the database
   updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
     updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
@@ -31,12 +31,12 @@ temp:string="";
   query{
   rooms{
   currentRoom
-    }}`;
+  }}`;
 
- removeRoom = gql`
-  mutation removeRoom($id: String!) {
-    removeBook(id:$id) {
-      _id
+  removeRoom = gql`
+  mutation removeRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+    removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+      currentRoom
     }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
@@ -46,10 +46,10 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
   const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index]; 
 
-  this.apollo.mutate({mutation: this.addRoom,
+ this.apollo.mutate({mutation: this.updateRoom,
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '+data );this.router.navigate(["/chat"]);}
-  ,(error) => {alert('Please enter a room!');});   
+  }}).subscribe(({ data }) => { alert('Room selected! '/*+data*/);this.router.navigate(["/chat"]);}
+  ,(error) => {alert('Please enter a room! '+error);});  
 
 }//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
     
@@ -57,7 +57,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
    for (var i = 0; i < this.roomList.length; i++) 
     {
       this.roomName=this.roomList[i];i+=1;
-       return this.roomName;
+      return this.roomName;
     } 
   }
 
@@ -65,18 +65,24 @@ create():void{
   this.roomName=this.add;
   this.roomList.push(this.roomName);
   this.add='';
-    this.apollo.mutate({mutation: this.addRoom,
-    variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-    }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
+  this.apollo.mutate({mutation: this.addRoom,
+  variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+  }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
 }
 
-delete():void{this.roomName=this.add;
+delete():void{
+  this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
   if (index != -1) {
-    this.roomList.splice(index, 1);  
-     alert('Room deleted!');
-     this.add='';     
-    }else{ 
+    //this.roomList.splice(index, 1);  
+    //alert('Room deleted!');
+    //this.add=''; 
+    this.apollo.mutate({mutation: this.removeRoom,
+    variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '+data);
+     },(error) => {alert('Please enter a room!');});  
+   }
+   else{ 
      //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
   }
