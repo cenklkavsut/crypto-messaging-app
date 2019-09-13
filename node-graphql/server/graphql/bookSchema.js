@@ -233,9 +233,11 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },
-          resolve( root, params, context) {
-            if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
-            return context.BookModel.getAll();//this needs adjustment based to check if exists          
+          resolve :async( root, params, context, { username }) => {
+            //if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
+            //return context.BookModel.getAll();//this needs adjustment based to check if exists        
+            const result = await BookModel.username.includes(username);
+            if (username) {return result.filter(user => user.username === username);}return {};
           }                 
         },
         updateRooms: {
