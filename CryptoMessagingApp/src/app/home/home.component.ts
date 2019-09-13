@@ -79,7 +79,7 @@ delete():void{
     //this.add=''; 
     this.apollo.mutate({mutation: this.removeRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '+data);
+    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '/*+data*/);
      },(error) => {alert('Please enter a room!');});  
    }
    else{ 

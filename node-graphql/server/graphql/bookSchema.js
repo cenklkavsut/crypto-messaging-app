@@ -275,7 +275,7 @@ var queryType = new GraphQLObjectType({
               type: new GraphQLNonNull(GraphQLString)
             }
           },resolve(root, params, args, context) {
-            return BookModel.findOne({ where: {id: args.id}}).then(BookModel => BookModel);          
+            return sql.raw('SELECT * FROM `bookType` WHERE `username` LIKE ?', args.username);
           }
         },fetchRoom: {
           type: roomType,
