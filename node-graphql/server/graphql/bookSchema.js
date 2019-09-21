@@ -232,9 +232,10 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },          
-          resolve: function (root,params, args) {
-            return BookModel.find({username:params.username, password:params.password}, function (err) {
-              if (err) return next(err);
+          resolve(root, params) {
+            //return BookModel.find({username:params.username, password:params.password}, function (err) {
+              return BookModel.find({username:params.username,password:params.password}, function (err) {
+            if (err) return next(err);
             });  
           }                  
         },
