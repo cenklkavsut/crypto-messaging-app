@@ -207,8 +207,7 @@ var queryType = new GraphQLObjectType({
             }
             return remBook;
           }
-        },
-        removeRoom: {
+        },removeRoom: {
           type: roomType,
           args: {
             id: {
@@ -216,7 +215,7 @@ var queryType = new GraphQLObjectType({
             }
           },
           resolve(root, params) {
-            const remRoom = rookModel.findByIdAndRemove(params.id).exec();
+            const remRoom = roomModel.findByIdAndRemove(params.id).exec();
             if (!remRoom) {
               throw new Error('Error')
             }
@@ -232,13 +231,12 @@ var queryType = new GraphQLObjectType({
               password: {
                 type: new GraphQLNonNull(GraphQLString)
               }
-          },
-          resolve :async( root, params, context, { username }) => {
-            //if (!context.BookModel || !context.BookModel.username.includes(username)) return null;
-            //return context.BookModel.getAll();//this needs adjustment based to check if exists        
-            const result = await BookModel.username.includes(username);
-            if (username) {return result.filter(user => user.username === username);}return {};
-          }                 
+          },          
+          resolve: function (root,params, args) {
+            return BookModel.find({username:params.username, password:params.password}, function (err) {
+              if (err) return next(err);
+            });  
+          }                  
         },
         updateRooms: {
           type: roomType,
@@ -248,12 +246,13 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve(root, params) {
+          resolve: function (root, params) {
             return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
             });
           }
-        },removeRooms: {
+        },
+        removeRooms: {
           type: roomType,
           args: {
               currentRoom: { type: new GraphQLNonNull(GraphQLString) },
@@ -261,34 +260,26 @@ var queryType = new GraphQLObjectType({
               sender: { type: new GraphQLNonNull(GraphQLString) },
               passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve(root, params) {
+          resolve: function (root, params) {
             return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
             });
           }
         },
-        fetchUser: {
-          type: bookType,
-          args: {
-            username: {
-              type: new GraphQLNonNull(GraphQLString)
-            },
-            password: {
-              type: new GraphQLNonNull(GraphQLString)
-            }
-          },resolve(root, params, args, context) {
-            return sql.raw('SELECT * FROM `bookType` WHERE `username` LIKE ?', args.username);
-          }
-        },fetchRoom: {
+        fetchRoom: {
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
             recipient: { type: new GraphQLNonNull(GraphQLString) },
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
-          },resolve(root, params, args, context) {
-            return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel);          
-          }
+          },
+          resolve: function (root, params, args, context) {
+            //return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
+            roomModel.find({id}, projections,(err, rooms) => {
+              err ? reject(err) : resolve(todos)
+          });     
+         }
         }
       }
     }
