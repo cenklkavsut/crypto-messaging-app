@@ -247,7 +247,7 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve: function (root, params) {
+          resolve(root, params) {
             return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
             });
@@ -261,7 +261,7 @@ var queryType = new GraphQLObjectType({
               sender: { type: new GraphQLNonNull(GraphQLString) },
               passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve: function (root, params) {
+          resolve(root, params) {
             return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
             });
