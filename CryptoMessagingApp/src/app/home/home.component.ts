@@ -28,46 +28,47 @@ temp:string="";
     }}`;
 
   checkQuery = gql`
-  query{
-  rooms{
+  mutation fetchRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
+  fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
+  _id
   currentRoom
-  }}`;
+  }}`;//this query should be able to check if room exists or not
 
   removeRoom = gql`
   mutation removeRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-    removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-      currentRoom
-    }}`;
+  removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+    currentRoom
+  }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
 
   join():void{
   this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
-  this.roomName=this.roomList[index]; 
+  this.roomName=this.roomList[index]; //this could check if it exists and if it does it joins the room
 
- this.apollo.mutate({mutation: this.updateRoom,
+ this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '/*+data*/);this.router.navigate(["/chat"]);}
-  ,(error) => {alert('Please enter a room! '+error);});  
-
-}//find a way to fetch id with graphql and then make a query that fetches id and then update based on it.
+  }}).subscribe(({ data }) => { alert('Room selected! '+data/**/);this.router.navigate(["/chat"]);}
+  ,(error) => {alert('Please enter a room! '+error);}); 
+}
     
   roomLists():string{//return a string room
    for (var i = 0; i < this.roomList.length; i++) 
-    {
+    {//later add a way to fetch room names and add it to the list
       this.roomName=this.roomList[i];i+=1;
       return this.roomName;
-    } 
+    }
   }
 
 create():void{
   this.roomName=this.add;
   this.roomList.push(this.roomName);
   this.add='';
+
   this.apollo.mutate({mutation: this.addRoom,
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');});   
+  }}).subscribe(({ data }) => { alert('Room created!'); },(error) => {alert('Please enter a room!');}); 
 }
 
 delete():void{
@@ -77,10 +78,12 @@ delete():void{
     //this.roomList.splice(index, 1);  
     //alert('Room deleted!');
     //this.add=''; 
+
     this.apollo.mutate({mutation: this.removeRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
     }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '/*+data*/);
-     },(error) => {alert('Please enter a room!');});  
+    },(error) => {alert('Please enter a room!');});
+
    }
    else{ 
      //this.roomList.splice(index, 1);  
@@ -89,7 +92,7 @@ delete():void{
 }
 
    logout():void{
-    this.apollo.getClient().resetStore();
+    this.apollo.getClient().resetStore();//this supports the log out query side
     this.router.navigate(["/login"]);//here update room name with empty
   }
 

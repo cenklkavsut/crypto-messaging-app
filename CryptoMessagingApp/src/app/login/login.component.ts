@@ -28,10 +28,10 @@ password
 }}`;
 
 checkLogin = gql`
- mutation loginBook($username:String!,$password:String!){
+mutation loginBook($username:String!,$password:String!){
   loginBook(username:$username,password:$password) {
      _id
-   }}`;//the database requires the completion of the database for Authentication.
+   }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
 
