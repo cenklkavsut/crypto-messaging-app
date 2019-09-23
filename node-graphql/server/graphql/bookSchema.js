@@ -232,12 +232,12 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },          
-          resolve: async (root, params,username,password,args) => {
+          resolve: async function (root, params){
            try{ 
             const decider= new Error('Invalid details please check your details again!');
-            const user =   BookModel.findOne({where:{username:params.username}}).exec();
-            const passwords =  BookModel.findOne({where:{password:params.password}}).exec();
-           if(!user||!passwords){return decider;}else if (user.password===passwords){return true; }
+            const user =  BookModel.findOne({where:{username:params.username}}).exec();
+            const valid =  BookModel.findOne({where:{password:params.password}}).exec();
+           if(!user||!valid){return decider;}else if (user.password===valid){return null; }
           }catch(decider) {return decider}
           }                            
         },
@@ -250,9 +250,9 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-            return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              if (err) return next(err);
-            });
+            //return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              //if (err) return next(err);
+            //});
           }
         },
         removeRooms: {
@@ -264,9 +264,9 @@ var queryType = new GraphQLObjectType({
               passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-            return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              if (err) return next(err);
-            });
+            //return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              //if (err) return next(err);
+            //});
           }
         },
         fetchRoom: {
@@ -279,9 +279,7 @@ var queryType = new GraphQLObjectType({
           },
           resolve:async function  (root, params, args, context) {
             //return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
-            roomModel.find({id}, projections,(err, rooms) => {
-              err ? reject(err) : resolve(todos)
-          });     
+            //roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
          }
         }
       }

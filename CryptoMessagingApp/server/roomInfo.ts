@@ -17,7 +17,3 @@ roomUse():string{
      } 
    }//basicly it needs a room query that canbe used together with user
 }//yarn relay:devnet and sudo npm serve,the server requires mongodb and monogoose to be installed and can be runned through npm start
-
-//fetch(`${'http://localhost:3000/graphql'}/graphql`, {method: 'POST',headers: { 'Content-Type': 'application/json' },
-//body:this.checkQuery,  }).then(res => res.json()).then(res => (this.checkQuery({ currentRoom: res.data.currentRoom })
-//)).catch(error => alert('error '+ error));
