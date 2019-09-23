@@ -1,4 +1,4 @@
-import { Component, OnInit, Query } from '@angular/core';
+import { Component, OnInit, Query, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -40,7 +40,17 @@ temp:string="";
     currentRoom
   }}`;
 
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
+  val = gql`query rooms{
+    rooms{
+      currentRoom
+    }
+  }`;
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
+if (!this.roomList[0]==null) {return;}else{
+this.apollo.watchQuery({query: this.val,variables: {
+  currentRoom: this.add}
+  ,}).valueChanges.subscribe((response) => {this.roomList.push(response.data.toString());});}
+}
 
   join():void{
   this.roomName=this.add;

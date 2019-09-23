@@ -232,12 +232,14 @@ var queryType = new GraphQLObjectType({
                 type: new GraphQLNonNull(GraphQLString)
               }
           },          
-          resolve(root, params) {
-            //return BookModel.find({username:params.username, password:params.password}, function (err) {
-              return BookModel.find({username:params.username,password:params.password}, function (err) {
-            if (err) return next(err);
-            });  
-          }                  
+          resolve: async (root, params,username,password,args) => {
+           try{ 
+            const decider= new Error('Invalid details please check your details again!');
+            const user =   BookModel.findOne({where:{username:params.username}}).exec();
+            const passwords =  BookModel.findOne({where:{password:params.password}}).exec();
+           if(!user||!passwords){return decider;}else if (user.password===passwords){return true; }
+          }catch(decider) {return decider}
+          }                            
         },
         updateRooms: {
           type: roomType,
@@ -275,7 +277,7 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve: function (root, params, args, context) {
+          resolve:async function  (root, params, args, context) {
             //return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
             roomModel.find({id}, projections,(err, rooms) => {
               err ? reject(err) : resolve(todos)
