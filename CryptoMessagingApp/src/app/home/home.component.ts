@@ -40,27 +40,30 @@ temp:string="";
     currentRoom
   }}`;
 
-  val = gql`query rooms{
+  fetchRooms = gql`query rooms{
     rooms{
       currentRoom
     }
   }`;
+
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-if (!this.roomList[0]==null) {return;}else{
-this.apollo.watchQuery({query: this.val,variables: {
-  currentRoom: this.add}
-  ,}).valueChanges.subscribe((response) => {this.roomList.push(response.data.toString());});}
+if (!this.roomList[0]==null) {return;}
+else{
+this.apollo.watchQuery({query: this.fetchRooms,variables: {currentRoom: this.add}
+,}).valueChanges.subscribe((response) => {this.roomList.push(response.data.toString());});
+}
 }
 
   join():void{
   this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index]; //this could check if it exists and if it does it joins the room
-  this.router.navigate(["/chat"]);
-this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
+
+  this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
   }}).subscribe(({ data }) => { alert('Room selected! ' /*+data*/);this.router.navigate(["/chat"]);}
   ,(error) => {alert('Please enter a room! '+error);}); 
+
 }
     
   roomLists():string{//return a string room
