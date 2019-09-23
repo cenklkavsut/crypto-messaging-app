@@ -57,10 +57,10 @@ this.apollo.watchQuery({query: this.val,variables: {
   const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index]; //this could check if it exists and if it does it joins the room
   this.router.navigate(["/chat"]);
- /*this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
+this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '+data);this.router.navigate(["/chat"]);}
-  ,(error) => {alert('Please enter a room! '+error);}); */
+  }}).subscribe(({ data }) => { alert('Room selected! ' /*+data*/);this.router.navigate(["/chat"]);}
+  ,(error) => {alert('Please enter a room! '+error);}); 
 }
     
   roomLists():string{//return a string room
