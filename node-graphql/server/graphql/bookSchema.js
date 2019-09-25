@@ -250,9 +250,9 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-            //return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              //if (err) return next(err);
-            //});
+            return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              if (err) return next(err);
+          });
           }
         },
         removeRooms: {
@@ -264,9 +264,9 @@ var queryType = new GraphQLObjectType({
               passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-            //return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              //if (err) return next(err);
-            //});
+            return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              if (err) return next(err);
+            });
           }
         },
         fetchRoom: {
@@ -278,8 +278,8 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve:async function  (root, params, args, context) {
-            //return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
-            //roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
+            return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
+            roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
          }
         }
       }
