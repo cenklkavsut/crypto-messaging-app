@@ -1,19 +1,19 @@
-class roominfo{
-roomNames:string;
-roomLists = new Array<string>();//this list contains room names
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var port = process.env.PORT || 4200;
 
-constructor(){}
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/chat.component.html');
+});
 
-addRoom(name:string){
-    this.roomLists.push(name);  
-}
+io.on('connection', function(socket){
+  socket.on('chat message', function(msg){
+    io.emit('chat message', msg);
+  });
+});
 
-roomUse():string{
-    for (var i = 0; i < this.roomLists.length; i++) 
-    {
-     this.roomNames=this.roomLists[i];
-     i+=1;
-      return this.roomNames;//list all rooms by looping through
-     } 
-   }//basicly it needs a room query that canbe used together with user
-}//yarn relay:devnet and sudo npm serve,the server requires mongodb and monogoose to be installed and can be runned through npm start
+http.listen(port, function(){
+  console.log('listening on *:' + port);
+});//<script src="/socket.io/socket.io.js"></script><script>var socket = io();</script>
+//yarn relay:devnet and sudo npm serve,the server requires mongodb and monogoose to be installed and can be runned through npm start

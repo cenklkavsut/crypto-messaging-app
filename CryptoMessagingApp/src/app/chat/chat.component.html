@@ -4,18 +4,20 @@
 <script src="chat.component.ts"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
-<font style="color: white"><h2>Crypto Messaging Application</h2></font>  
-<button type="button" class="btn btn-default" class="example_a"  style="height:9px;" (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
-<div class="dropup"><button class="dropbtn" >Messagaging verification <i class="fa fa-bars" ></i></button>
-<div class="dropup-content"> <font style="color: white"><label>Ark wallet info required for Messaging!</label></font>                        
-<div><font style="color: white"><label>Recipient:</label></font>
-<input type="text"  [(ngModel)]="recipientId" style="align-self: auto;"></div>
-<div> <font style="color: white"><label>Sender Id:</label></font>
-<input type="text" [(ngModel)]="SenderId"  style="align-self: auto;"></div>
-<div><font style="color: white"><label>Password of wallet:</label></font>
-<input type="text"  [(ngModel)]="passPhrase" style="align-self: auto;"></div>    
-<div> <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="confirm()">confirm</button></div>              
-    </div> </div> 
+        <div class="dropup"><button class="dropbtn" style="align-self: auto;margin-left:-1300px;"><i class="fa fa-bars" ></i>Messagaging verification </button>
+            <div class="dropup-content"style="align-self: auto;margin-left:-750px;"><font style="color: white;"><label>Ark wallet information</label></font>                      
+            <div>
+            <input type="text"  [(ngModel)]="recipientId" style="align-self: auto;"placeholder="Enter the recipient"></div>
+            <div> 
+            <input type="text" [(ngModel)]="SenderId"  style="align-self: auto;"placeholder="Enter the sender Id"></div>
+            <div>
+            <input type="text"  [(ngModel)]="passPhrase" style="align-self: auto;"placeholder="Enter wallet passphrase"></div>    
+            <div> <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="confirm()">confirm</button></div>              
+           </div>
+        </div> 
+   <font style="color: white;height:9px; align-self: auto; align-content: center;margin-left:-190px"><label>Crypto Messaging Application</label></font>
+   <button type="button" class="btn btn-default" class="example_a"  style="height:9px;align-self: center;margin-right:-190px;"  (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
+ </div> 
         <div class="row">
     <font style="color: white"><h2>Crypto Messaging Application</h2></font>
     <div class="myBox">
@@ -25,9 +27,9 @@
         </div>
     </div>
 </div></div>
-</div>
+</div> 
 <div class="row"><div class="col-sm-10">
-     <input type="text" class="form-control" [(ngModel)]="messageText" style="width:79%;">     
+     <input type="text" class="form-control" [(ngModel)]="messageText" style="width:79%;"placeholder="Enter a message">     
      <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="sendMessage()" >Send</button>
     </div><div class="container" style="text-align:left;"> <font style="color: white"><h2>{{roomName}}</h2></font>
 </div></div></div>
