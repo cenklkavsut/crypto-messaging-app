@@ -5,8 +5,7 @@ import gql from 'graphql-tag';
 //const Client = require("@arkecosystem/client");
 //const client = new Client("localhost:4003");//the blockchain node it point to
 
-// you can find the source code for these here:
-// https://github.com/ArkEcosystem/core/tree/master/packages/crypto/src
+// you can find the source code for these here:// https://github.com/ArkEcosystem/core/tree/master/packages/crypto/src
 const crypto = require("@arkecosystem/crypto");//this allows for performing crypto operations.
 
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
@@ -30,15 +29,14 @@ message=this.messageText;
 passPhrase:string='';//is needed to send messages.also it is the password you use to sign your wallet
 signed = null;
 
-  //this updates a room to the database
-  updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-    updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-    currentRoom
-    }}`;
+//this updates a room to the database
+updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+currentRoom
+}}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo)
-{ 
-
+{
 console.log(crypto);//look at the developer console output to inspect the contents of the crypto toolset
 //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
 const m = this.messageText;//the message that gets hashed to be send
@@ -52,6 +50,7 @@ const signature = crypto.Crypto.Message.sign(hash, this.passPhrase);//the signat
     signature
   };
   //client.setVersion(2);this makes the client run on version two of ark core
+
 }
 
 home():void{this.router.navigate(["/home"]); alert("leaving chat!");}//to go back to the page of the rooms
@@ -82,13 +81,28 @@ async sendMessage(){//allows for sending message
   alert("enter recipient id and sender id of your wallet correctly!");
 }
 
+//For message add this information before the signature
+//verify Verify the given message, public key and signature combination.
+//toArray Turn the message into a standardized array.
+//toJson Turn the message into a JSON string using the toArray data as the source.
+/*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
+const privateKey=crypto.privateKey.fromPassphrase(this.passPhrase);//this gets the private key of the message
+const publicKey=crypto.publicKey.fromPassphrase(this.passPhrase);//this gets the public key of the message
+crypto.publicKey.validate(publicKey);//add value that validates
+crypto.address.validate(address);
+const fixture = {
+  data:{
+  publicKey:publicKey,signature:,//get signature and change place 
+  message: this.messageText},passphrase: this.passPhrase
+};*/
+
 }
 
 /*async recieveMessage(){ //the client to recieve message/transaction
- try {const response = await client.resource("transactions").all({
+ try {const response = await Client.resource("transactions").all({
       senderId: this.SenderId,//this recieves message from wallet and takes sender from user
       orderBy: "timestamp.epoch"
-    });return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
+});return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
   } catch (e) {console.log(e);
   this.messageArray.push(this.messageContainer);//push the message in the array to be displayed
 }}*/

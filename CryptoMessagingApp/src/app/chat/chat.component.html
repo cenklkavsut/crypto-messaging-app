@@ -4,8 +4,8 @@
 <script src="chat.component.ts"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="container">
-        <div class="dropup"><button class="dropbtn" style="align-self: auto;margin-left:-1300px;"><i class="fa fa-bars" ></i>Messagaging verification </button>
-            <div class="dropup-content"style="align-self: auto;margin-left:-750px;"><font style="color: white;"><label>Ark wallet information</label></font>                      
+        <div class="dropup"><button class="dropbtn" style="align-content:left;"><i class="fa fa-bars" ></i>Messagaging verification </button>
+            <div class="dropup-content"style="align-content:center;align-self:auto;"><font style="color: white;"><label>Ark wallet information</label></font>                      
             <div>
             <input type="text"  [(ngModel)]="recipientId" style="align-self: auto;"placeholder="Enter the recipient"></div>
             <div> 
@@ -15,13 +15,13 @@
             <div> <button type="button" class="btn btn-success" class="example_a" style="height:9px;" (click)="confirm()">confirm</button></div>              
            </div>
         </div> 
-   <font style="color: white;height:9px; align-self: auto; align-content: center;margin-left:-190px"><label>Crypto Messaging Application</label></font>
-   <button type="button" class="btn btn-default" class="example_a"  style="height:9px;align-self: center;margin-right:-190px;"  (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
+   <font style="color: white;height:99px; align-self: auto; align-content: center;"><label>Crypto Messaging Application</label></font>
+   <button type="button" class="btn btn-default" class="example_a"  style="height:9px;align-self: center;"  (click)="home()"routerLink="/home" routerLinkActive="active">Leave</button>
  </div> 
         <div class="row">
     <font style="color: white"><h2>Crypto Messaging Application</h2></font>
     <div class="myBox">
-    <div class="well" >
+    <div class="well">
         <div *ngFor="let item of messageArray">
         <span><strong>{{user}} : </strong> {{item}}</span>
         </div>
