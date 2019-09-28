@@ -235,8 +235,8 @@ var queryType = new GraphQLObjectType({
           resolve: async function (root, params){
            try{ 
             const decider= new Error('Invalid details please check your details again!');
-            const user = await BookModel.findOne({where:{username:params.username}}).exec();
-            const valid = await BookModel.findOne({where:{password:params.password}}).exec();
+            const user =  BookModel.findOne({where:{username:params.username}}).exec();
+            const valid =  BookModel.findOne({where:{password:params.password}}).exec();
            if(!user||!valid){return decider;}else if (user.password===valid){return null; }
           }catch(decider) {return decider}
           }                            

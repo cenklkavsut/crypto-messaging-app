@@ -40,7 +40,7 @@ temp:string="";
     currentRoom
   }}`;
 
-  fetchRooms = gql`query rooms{
+  fetchRooms = gql`type rooms{
     rooms{
       currentRoom
     }

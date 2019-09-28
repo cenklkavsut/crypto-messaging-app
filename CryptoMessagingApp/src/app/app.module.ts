@@ -10,19 +10,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { NavComponent } from './nav/nav.component';
-import { HomeComponent } from './home/home.component';
 import { ChatComponent } from './chat/chat.component';
+//import { HomeComponent } from './home/home.component'
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms'
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavComponent,
-    HomeComponent,
     ChatComponent,
+    //HomeComponent,
     ],
   imports: [
     BrowserModule,

@@ -53,7 +53,7 @@ const signature = crypto.Crypto.Message.sign(hash, this.passPhrase);//the signat
 
 }
 
-home():void{this.router.navigate(["/home"]); alert("leaving chat!");}//to go back to the page of the rooms
+home():void{this.router.navigate(["/login"]); alert("leaving chat!");}//to go back to the page of the rooms
 //send message is correct check recieve,server and blockchain connection and wallet.
 async sendMessage(){//allows for sending message
   if(this.recipientId!=''&&this.SenderId!=''){//recipient is reciever and the sender is where to send to
