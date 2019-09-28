@@ -235,8 +235,8 @@ var queryType = new GraphQLObjectType({
           resolve: async function (root, params){
            try{ 
             const decider= new Error('Invalid details please check your details again!');
-            const user = await BookModel.findOne({where:{username:params.username}}).exec();
-            const valid = await BookModel.findOne({where:{password:params.password}}).exec();
+            const user =  BookModel.findOne({where:{username:params.username}}).exec();
+            const valid = BookModel.findOne({where:{password:params.password}}).exec();
            if(!user||!valid){return decider;}else if (user.password===valid){return null; }
           }catch(decider) {return decider}
           }                            
@@ -253,20 +253,6 @@ var queryType = new GraphQLObjectType({
             return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
           });
-          }
-        },
-        removeRooms: {
-          type: roomType,
-          args: {
-              currentRoom: { type: new GraphQLNonNull(GraphQLString) },
-              recipient: { type: new GraphQLNonNull(GraphQLString) },
-              sender: { type: new GraphQLNonNull(GraphQLString) },
-              passphrase: { type: new GraphQLNonNull(GraphQLString) }
-          },
-          resolve(root, params) {
-            return roomModel.findByIdAndRemove(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              if (err) return next(err);
-            });
           }
         },
         fetchRoom: {
