@@ -4,7 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ChatComponent } from './chat/chat.component';
 
-const routes: Routes = [{path:  'login', component:  LoginComponent},{path:  'home', component:  HomeComponent},
+const routes: Routes = [{path:  'login', component:  LoginComponent},{path:  'home', component:  HomeComponent}/**/,
 {path:  'chat', component:  ChatComponent}];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

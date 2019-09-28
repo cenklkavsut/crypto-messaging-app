@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 //const Client = require("@arkecosystem/client");
-//const client = new Client("localhost:4003");//the blockchain node it point to
+//const client = new Client("localhost:4200");//the blockchain node it point to
 
 // you can find the source code for these here:// https://github.com/ArkEcosystem/core/tree/master/packages/crypto/src
 const crypto = require("@arkecosystem/crypto");//this allows for performing crypto operations.
@@ -49,7 +49,7 @@ const signature = crypto.Crypto.Message.sign(hash, this.passPhrase);//the signat
     hash, // not really needed
     signature
   };
-  //client.setVersion(2);this makes the client run on version two of ark core
+  //client.setVersion(2);this makes the client run on version two of ark core for cusom ark blockchain
 
 }
 
@@ -85,11 +85,13 @@ async sendMessage(){//allows for sending message
 //verify Verify the given message, public key and signature combination.
 //toArray Turn the message into a standardized array.
 //toJson Turn the message into a JSON string using the toArray data as the source.
+
 /*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
 const privateKey=crypto.privateKey.fromPassphrase(this.passPhrase);//this gets the private key of the message
 const publicKey=crypto.publicKey.fromPassphrase(this.passPhrase);//this gets the public key of the message
 crypto.publicKey.validate(publicKey);//add value that validates
 crypto.address.validate(address);
+
 const fixture = {
   data:{
   publicKey:publicKey,signature:,//get signature and change place 
@@ -99,7 +101,7 @@ const fixture = {
 }
 
 /*async recieveMessage(){ //the client to recieve message/transaction
- try {const response = await Client.resource("transactions").all({
+ try {const response = await client.resource("transactions").all({
       senderId: this.SenderId,//this recieves message from wallet and takes sender from user
       orderBy: "timestamp.epoch"
 });return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
