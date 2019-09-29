@@ -222,26 +222,20 @@ var queryType = new GraphQLObjectType({
             return remRoom;
           }
         },
-        loginBook: {
-          type: bookType,
+        removeRooms: {
+          type: roomType,
           args: {
-            username: {
-                type: new GraphQLNonNull(GraphQLString)
-              },
-              password: {
-                type: new GraphQLNonNull(GraphQLString)
-              }
-          },          
-          resolve: async function (root, params){
-           try{ 
-            const decider= new Error('Invalid details please check your details again!');
-            //const user =  BookModel.findOne({where:{username:params.username}}).exec();
-            //const valid =  BookModel.findOne({where:{password:params.password}}).exec();
-          // if(!user||!valid){return decider;}else if (user.password===valid){return null; }
-          const user = await BookModel.findOne({where:{username:params.username,password: params.password }}).exec();
-          if(!user){return decider;}else{return null; }
-          }catch(decider) {return decider}
-          }                            
+            id: {
+              type: new GraphQLNonNull(GraphQLString)
+            }
+          },
+          resolve(root, params) {
+            const remRoom = roomModel.findByIdAndRemove(params.id).exec();
+            if (!remRoom) {
+              throw new Error('Error')
+            }
+            return remRoom;
+          }
         },
         updateRooms: {
           type: roomType,
@@ -265,9 +259,39 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve:async function  (root, params, args, context) {
-            return roomModel.findOne({ where: {id: args.id}}).then(roomModel => roomModel); 
-            roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
+          resolve:async function  (root, params) {
+            const ids=roomModel.findOne({ where: {id: params.id}}) = true;
+            return Object.values(ids);
+            //return roomModel.findOne({ where: {id: params.id}}).then(roomModel => roomModel); 
+            //roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
+         }
+        },loginBook: {
+          type: bookType,
+          args: {
+            username: {type: new GraphQLNonNull(GraphQLString)},
+              password: {type: new GraphQLNonNull(GraphQLString)}
+          },          
+          resolve: async function (root, params){
+           try{ 
+            const decider= new Error('Invalid details please check your details again!');
+            const user =  await BookModel.findOne({where:{username:params.username}}).exec();
+            const valid = await BookModel.findOne({where:{password:params.password}}).exec();
+           if(!user||!valid){return decider;}else if (user.password===valid&&valid.username==user){return true; }
+          //const user = await BookModel.findOne({where:{username:params.username,password: params.password }}).exec();
+          //if(!user){return decider;}else{return user; }
+          }catch(decider) {return decider}
+          }                            
+        },fetchUser: {
+          type: bookType,
+          args: {
+            username: {type: new GraphQLNonNull(GraphQLString)},
+              password: {type: new GraphQLNonNull(GraphQLString)}
+          },
+          resolve:async function  (root, params) {
+            const ids=bookModel.findOne({ where: {id: params.id}}) = true;
+            return Object.values(ids);
+            //return roomModel.findOne({ where: {id: params.id}}).then(roomModel => roomModel); 
+            //roomModel.find({id}, projections,(err, rooms) => { err ? reject(err) : resolve(todos)});             
          }
         }
       }

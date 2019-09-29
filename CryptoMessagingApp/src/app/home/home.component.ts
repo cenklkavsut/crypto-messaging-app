@@ -79,7 +79,7 @@ delete():void{
   if (index != -1) {
     if(r==true){
     this.roomList.splice(index, 1);  
-    alert('Room deletedr');
+    alert('Room deleted');
     this.add=''; 
     }
     else{
