@@ -1,5 +1,6 @@
 //<script src="/socket.io/socket.io.js"></script><script>var socket = io();</script>
 //yarn relay:devnet and sudo npm serve,the server requires mongodb and monogoose to be installed and can be runned through npm start
+//the aapp uses mongodb and graphql 
 //List of todo
 //finish login exist query 
 //finish blochain 
@@ -11,7 +12,6 @@
     //query: this.checkLogin,variables: {username: this.username,password: this.password
     //}}).valueChanges.subscribe(({ data })=> {if(data==true)alert('Welcome!'+data);this.router.navigate(["/home"]);}
    // ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home*/  
-
             //const user =  await BookModel.findOne({where:{username:params.username}}).exec();
             //const valid = await BookModel.findOne({where:{password:params.password}}).exec();
            //if(!user||!valid){return decider;}else if (user.password===valid&&valid.username==user){return true; }

@@ -9,7 +9,7 @@ var mongoose = require('mongoose');
 var graphqlHTTP = require('express-graphql');
 var schema = require('./graphql/bookSchema');
 var cors = require("cors");
-
+mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
