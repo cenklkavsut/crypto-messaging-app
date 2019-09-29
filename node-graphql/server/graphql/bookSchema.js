@@ -276,8 +276,8 @@ var queryType = new GraphQLObjectType({
           if (!user) {throw new Error(decider);}
           const valid = await bcrypt.compare(password, user.password);
           if (!valid) {throw new Error(decider);}
-           //const token = jwt.sign({user: _.pick(user, ['_id', 'username'])});      
-           return true;/**/
+           const token = jwt.sign({user: _.pick(user, ['_id', 'username'])});      
+           return token;/**/
           }catch(decider) {return decider}
           }                            
         },fetchUser: {
