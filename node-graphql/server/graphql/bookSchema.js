@@ -235,9 +235,11 @@ var queryType = new GraphQLObjectType({
           resolve: async function (root, params){
            try{ 
             const decider= new Error('Invalid details please check your details again!');
-            const user =  BookModel.findOne({where:{username:params.username}}).exec();
-            const valid =  BookModel.findOne({where:{password:params.password}}).exec();
-           if(!user||!valid){return decider;}else if (user.password===valid){return null; }
+            //const user =  BookModel.findOne({where:{username:params.username}}).exec();
+            //const valid =  BookModel.findOne({where:{password:params.password}}).exec();
+          // if(!user||!valid){return decider;}else if (user.password===valid){return null; }
+          const user = await BookModel.findOne({where:{username:params.username,password: params.password }}).exec();
+          if(!user){return decider;}else{return null; }
           }catch(decider) {return decider}
           }                            
         },

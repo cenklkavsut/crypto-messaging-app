@@ -4,4 +4,6 @@
 //finish login exist query 
 //finish blochain 
 //messaging with fetching the message from the chain while runing mainnet and test
-//login ,fetch and update query
+//login ,fetch and exist query
+//home ,fetch,delete and update query
+//finish chat

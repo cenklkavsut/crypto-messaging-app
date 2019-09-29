@@ -74,19 +74,22 @@ create():void{
 delete():void{
   this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
+  //const decider:Boolean =false;
+  var r = confirm('Delete the room completely press on cancel only delete from list press ok!');
   if (index != -1) {
-    //this.roomList.splice(index, 1);  
-    //alert('Room deleted!');
-    //this.add=''; 
-
+    if(r==true){
+    this.roomList.splice(index, 1);  
+    alert('Room deletedr');
+    this.add=''; 
+    }
+    else{
     this.apollo.mutate({mutation: this.removeRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
     }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '/*+data*/);
     },(error) => {alert('Please enter a room!');});
-
-   }
+  }
+}
    else{ 
-     //this.roomList.splice(index, 1);  
      alert('Room deletion error!');    
   }
 }
@@ -95,5 +98,6 @@ delete():void{
     this.apollo.getClient().resetStore();//this supports the log out query side
     this.router.navigate(["/login"]);//here update room name with empty
   }
+
   ngOnInit() {}
 }
