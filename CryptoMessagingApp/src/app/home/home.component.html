@@ -1,0 +1,29 @@
+<div class="container">
+    <div style="text-align:center">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+           <script src="home.component.ts"></script>
+            <div class="container-fluid">
+              <div class="row">
+                  <font style="color: white"><h2>Crypto Messaging Application</h2></font>
+                     <font style="margin-top:19px;" class="pull-right"><button type="button" class="btn btn-default" class="example_a"(click)="logout()"routerLinkActive="active">Logout</button></font>
+                     <hr></div>
+              <div class="row">
+                    <div class="col-sm-5">
+                      <div class="form-group">
+                          <font style="color: white"><label for="username">create,select or delete room:</label></font>
+                          <input type="text" [(ngModel)]="add" class="form-control" id="username" placeholder="Enter room">
+                      </div>
+                  </div>
+                  <div class="col-sm-5">
+                      <font style="color: white"> <label for="roomInput">Choose room:</label></font>
+                      <select name="roomInput" id="roomInput" class="form-control" (click)="roomLists()" [(ngModel)]="roomList">
+                        <option *ngFor="let list of roomList">{{ list }}</option>
+                  </select>
+                  </div>
+                  <div class="col sm-2">
+                      <div style="margin-top:19px;" class="pull-center"> 
+                          <button type="button" class="btn btn-primary" class="example_a" (click)="join()">Join</button>
+                          <button type="button" class="btn btn-default" class="example_a" (click)="create()">create</button>
+                          <button type="button" class="btn btn-default" class="example_a" (click)="delete()">delete</button>
+                      </div>
+ </div></div></div>         
