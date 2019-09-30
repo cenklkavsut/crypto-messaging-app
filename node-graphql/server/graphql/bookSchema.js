@@ -260,8 +260,7 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve:async function  (root, params) {
-            const ids=roomModel.findOne({ where: {id: params.id}}) = true;
-            return Object.values(ids);          
+            return roomModel.findOne({ where: {id: params.id}}).then(roomModel => roomModel);          
          }
         },loginBook: {
           type: bookType,
@@ -278,7 +277,7 @@ var queryType = new GraphQLObjectType({
           if (!valid) {throw new Error(decider);}
            const token = jwt.sign({user: _.pick(user, ['_id', 'username'])});      
            return token;/**/
-          }catch(decider) {return decider}
+          }catch(decider) {return decider;}
           }                            
         },fetchUser: {
           type: bookType,
@@ -286,8 +285,7 @@ var queryType = new GraphQLObjectType({
             username: {type: new GraphQLNonNull(GraphQLString)},
               password: {type: new GraphQLNonNull(GraphQLString)}
           },resolve:async function  (root, params) {
-            const ids=bookModel.findOne({ where: {id: params.id}}) = true;
-            return Object.values(ids);
+             return bookModel.findOne({ where: {id: params.id}}).then(bookModel => bookModel); 
           }
         }
       }
