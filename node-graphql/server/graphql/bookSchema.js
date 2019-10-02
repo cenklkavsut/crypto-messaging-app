@@ -266,9 +266,10 @@ var queryType = new GraphQLObjectType({
             password: {type: new GraphQLNonNull(GraphQLString)}
           },          
           resolve: async function (root, params,parent, args, context){
-          const user =   BookModel.findOne({ where: params.username });
-          const valid =  BookModel.findOne({ where: params.password } );         
-          if (!valid||!user) {return false;}else if(valid === user.password){return true;}else{return false;}
+          const BookModel = new BookModel(params);//this takes the parameters   
+          const user =  await BookModel.findOne({where:{username:parent.username}}).exec();//this finds the username in the database
+          const valid = await BookModel.findOne({where:{password:parent.password}}).exec();//this finds the password in the database
+          if(!user||!valid){return decider;}else if (user.password===valid&&valid.username==user){return true; }
           /* const user =  await BookModel.findOne({ where: { username:params.username } });
           const valid = await BookModel.findOne({ where: {password:params.password} });     
           if (!user) {return false;}   
@@ -285,9 +286,9 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve:async function  (root, params) {
-            //return roomModel.find().exec();      
-            if (params.currentRoom === 'undefined'){return roomModel;}
-            return roomModel.filter((currentRoom) => params.currentRoom === currentRoom);      
+            const RoomModel = new roomModel(params);   
+            if (params.currentRoom === 'undefined'){return 'Please be sure if the room exists!';}
+            return RoomModel.filter({ where: params.currentRoom });      
          }
         }
       }

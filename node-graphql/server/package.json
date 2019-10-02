@@ -7,13 +7,15 @@
     "nodemon": "nodemon ./bin/www"
   },
   "dependencies": {
+    "apollo-server-express": "^2.9.4",
+    "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.5",
     "cookie-parser": "~1.4.4",
     "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^14.5.4",
     "http-errors": "~1.6.3",

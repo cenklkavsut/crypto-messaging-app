@@ -32,8 +32,6 @@ temp:string="";
   fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
   currentRoom
   }}`;//this query should be able to check if room exists or not
-  query = gql`query roomRetriever{ roomRetriever{currentRoom}}`;//this query should be able to check if room exists or not
-
   removeRoom = gql`
   mutation removeRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
