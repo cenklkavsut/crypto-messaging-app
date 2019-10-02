@@ -38,12 +38,10 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
 signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
-
-this.apollo.mutate({// this should be a query that checks if exist of not 
-mutation: this.checkLogin,variables: {usuername: this.username,password: this.password
-}}).subscribe(({ data })=> {alert('Welcome!');this.router.navigate(["/home"]);}
+// this should be a query that checks if exist of not 
+this.apollo.mutate({mutation: this.checkLogin,variables: {usuername: this.username,password: this.password
+}}).subscribe(({ data })=>{alert('Welcome!'+data);this.router.navigate(["/home"]);}
 ,(error) => {alert('there was an error when loging in Please check your details '+ error);});//this checks and forwards to home
-
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
 this.apollo.mutate({ mutation: this.addBook,//this creates the account in the database and forwads to login

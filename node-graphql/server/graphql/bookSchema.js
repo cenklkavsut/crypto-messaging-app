@@ -110,7 +110,7 @@ var queryType = new GraphQLObjectType({
               name: 'currentRoom',
               type: GraphQLString
             }}, resolve: (root, params) => {
-              return roomModel.findOne(params.currentRoom).exec();
+              return roomModel.filter(params.currentRoom).exec();
           }}
       }
     }
@@ -269,15 +269,14 @@ var queryType = new GraphQLObjectType({
           const BookModel = new BookModel(params);//this takes the parameters   
           const user =  await BookModel.findOne({where:{username:parent.username}}).exec();//this finds the username in the database
           const valid = await BookModel.findOne({where:{password:parent.password}}).exec();//this finds the password in the database
-          if(!user||!valid){return decider;}else if (user.password===valid&&valid.username==user){return true; }
+          if(!user||!valid){return "there was an error when loging in Please check your details!";}else{return true; }
           /* const user =  await BookModel.findOne({ where: { username:params.username } });
           const valid = await BookModel.findOne({ where: {password:params.password} });     
           if (!user) {return false;}   
           const valid = await bcrypt.compare(password,user.password);         
           if (!valid) {return false;}else{return user;}*/
           }                            
-        },
-        fetchRoom: {//this allows to fetch a certain room by room name
+        },fetchRoom: {//this allows to fetch a certain room by room name
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },

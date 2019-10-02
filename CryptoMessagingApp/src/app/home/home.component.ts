@@ -28,8 +28,8 @@ temp:string="";
     }}`;
 
   checkQuery = gql`
-  mutation fetchRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
-  fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
+  mutation roomRetriever($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
+    roomRetriever(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
   currentRoom
   }}`;//this query should be able to check if room exists or not
   removeRoom = gql`
@@ -38,12 +38,13 @@ temp:string="";
     currentRoom
   }}`;
 
+
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-this.apollo.mutate({mutation: this.checkQuery,//this will get rooms to the room list
-variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-}}).subscribe(({ data }) => {this.roomList.push(data.toString());},(error) => {alert('Could not load rooms! '+error);}); 
-//this.apollo.watchQuery<any>({query: this.checkQuery,variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-//}}).valueChanges.subscribe(({ data }) => { this.roomList.push(data);},(error) => {alert('Could not load rooms! '+error);}); 
+if (!this.roomList[0]==null) {return;}
+else{
+this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add}
+,}).valueChanges.subscribe((response) => {this.roomList.push(response.data.toString());});
+}
 }
 
   join():void{
@@ -53,7 +54,7 @@ variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passp
 
  this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! ');data=this.add;this.router.navigate(["/chat"]);}
+  }}).subscribe(({ data }) => { alert('Room selected! ');this.add=data.toString();this.router.navigate(["/chat"]);}
   ,(error) => {alert('Please enter a room! '+error);}); 
 }
     
@@ -92,8 +93,7 @@ delete():void{
     }}).subscribe(({ data }) => {this.roomList.splice(index, 1);data=this.add;this.add='';alert('Room deleted! '/*+data*/);
     },(error) => {alert('Please enter a room!');});
   }
-}
-   else{ 
+} else{ 
      alert('Room deletion error!');    
   }
 }
