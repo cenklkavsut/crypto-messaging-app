@@ -7,8 +7,8 @@ var GraphQLID = require('graphql').GraphQLID;
 var GraphQLString = require('graphql').GraphQLString;
 var GraphQLInt = require('graphql').GraphQLInt;//var GraphQLDate = require('graphql-date');
 var BookModel = require('../models/Book');
-var roomModel = require('../models/room');//var AuthService = require('../models/auth')
-
+var roomModel = require('../models/room');
+//the book object that contains login information
  var bookType = new GraphQLObjectType({
     name: 'book',
     fields: function () {
@@ -25,7 +25,7 @@ var roomModel = require('../models/room');//var AuthService = require('../models
       }
     }
   });
-
+//the room object that contains room information
   var roomType = new GraphQLObjectType({
     name: 'room',
     fields: function () {
@@ -48,7 +48,7 @@ var roomModel = require('../models/room');//var AuthService = require('../models
       }
     }
   }); 
-  
+  //the query allows displaying information
 var queryType = new GraphQLObjectType({
     name: 'Query',
     fields: function () {
@@ -103,18 +103,26 @@ var queryType = new GraphQLObjectType({
             }
             return roomDetails
           }
-        }      
+        },roomRetriever: {//this allows to retrieve the list of rooms
+          type: roomType,
+          args: {
+            currentRoom: {
+              name: 'currentRoom',
+              type: GraphQLString
+            }}, resolve: (root, params) => {
+              return roomModel.findOne(params.currentRoom).exec();
+          }}
       }
     }
   });
 
-  module.exports = new GraphQLSchema({query: queryType});
-
+  module.exports = new GraphQLSchema({query: queryType});//this allows to use it in the schema
+//this is a mutation that allows for interacting data 
   var mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: function () {
       return {
-        addBook: {
+        addBook: {//this allows to add a book
           type: bookType,
           args: {
             username: {
@@ -132,7 +140,7 @@ var queryType = new GraphQLObjectType({
             }
             return newBook
           }
-        },addroom: {
+        },addroom: {//this allows to add a room
           type: roomType,
           args: {
             currentRoom: {
@@ -157,7 +165,7 @@ var queryType = new GraphQLObjectType({
             return newRoom
           }
         },
-        updateBook: {
+        updateBook: {//this allows to update a book by id
           type: bookType,
           args: {
             id: {
@@ -176,7 +184,7 @@ var queryType = new GraphQLObjectType({
               if (err) return next(err);
             });
           }
-        },updateRoom: {
+        },updateRoom: {//this allows to update a room y id
           type: roomType,
           args: {
             id: {
@@ -193,7 +201,7 @@ var queryType = new GraphQLObjectType({
               if (err) return next(err);
             });
           }
-        },removeBook: {
+        },removeBook: {//this allows to remove a book by id
           type: bookType,
           args: {
             id: {
@@ -230,14 +238,14 @@ var queryType = new GraphQLObjectType({
             }
           },
           resolve(root, params) {
-            const remRoom = roomModel.findByIdAndRemove(params.id).exec();
+            const remRoom = roomModel.findOneAndRemove(params.currentRoom).exec();
             if (!remRoom) {
               throw new Error('Error')
             }
             return remRoom;
           }
         },
-        updateRooms: {
+        updateRooms: {//this allows to update a certain room by room name
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
@@ -246,12 +254,29 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve(root, params) {
-            return roomModel.findByIdAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+            return roomModel.findOneAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
               if (err) return next(err);
-          });
+          }).then(x => {x=bookModel.save();return  x;});
           }
         },
-        fetchRoom: {
+        loginBook: {//this allows to check if book contains username and password of it if it does it returns true else returns false
+          type: bookType,
+          args: {
+            username: {type: new GraphQLNonNull(GraphQLString)},
+            password: {type: new GraphQLNonNull(GraphQLString)}
+          },          
+          resolve: async function (root, params,parent, args, context){
+          const user =   BookModel.findOne({ where: params.username });
+          const valid =  BookModel.findOne({ where: params.password } );         
+          if (!valid||!user) {return false;}else if(valid === user.password){return true;}else{return false;}
+          /* const user =  await BookModel.findOne({ where: { username:params.username } });
+          const valid = await BookModel.findOne({ where: {password:params.password} });     
+          if (!user) {return false;}   
+          const valid = await bcrypt.compare(password,user.password);         
+          if (!valid) {return false;}else{return user;}*/
+          }                            
+        },
+        fetchRoom: {//this allows to fetch a certain room by room name
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
@@ -260,36 +285,13 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve:async function  (root, params) {
-            return roomModel.findOne({ where: {id: params.id}}).then(roomModel => roomModel);          
+            //return roomModel.find().exec();      
+            if (params.currentRoom === 'undefined'){return roomModel;}
+            return roomModel.filter((currentRoom) => params.currentRoom === currentRoom);      
          }
-        },loginBook: {
-          type: bookType,
-          args: {
-            username: {type: new GraphQLNonNull(GraphQLString)},
-              password: {type: new GraphQLNonNull(GraphQLString)}
-          },          
-          resolve: async function (root, params){
-           try{ 
-          const decider= new Error('Invalid details please check your details again!');
-          const user = await BookModel.User.findOne({ where: { username:params.username } });
-          if (!user) {throw new Error(decider);}
-          const valid = await bcrypt.compare(password, user.password);
-          if (!valid) {throw new Error(decider);}
-           const token = jwt.sign({user: _.pick(user, ['_id', 'username'])});      
-           return token;/**/
-          }catch(decider) {return decider;}
-          }                            
-        },fetchUser: {
-          type: bookType,
-          args: {
-            username: {type: new GraphQLNonNull(GraphQLString)},
-              password: {type: new GraphQLNonNull(GraphQLString)}
-          },resolve:async function  (root, params) {
-             return bookModel.findOne({ where: {id: params.id}}).then(bookModel => bookModel); 
-          }
         }
       }
     }
   });
 
-module.exports = new GraphQLSchema({query: queryType, mutation: mutation});
+module.exports = new GraphQLSchema({query: queryType, mutation: mutation});//this allows to use it in the schema

@@ -27,10 +27,10 @@ username
 password
 }}`;
 
-checkLogin = gql`
-query loginBook($username:String!,$password:String!){
+checkLogin = gql`mutation loginBook($username:String!,$password:String!){
 loginBook(username:$username,password:$password) {
-   _id
+username
+password
 }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
@@ -41,18 +41,16 @@ if(this.username!=null&& this.password!=null && this.login==true&& this.conf==fa
 
 this.apollo.mutate({// this should be a query that checks if exist of not 
 mutation: this.checkLogin,variables: {usuername: this.username,password: this.password
-}}).subscribe(({ data })=> {if(data==true){alert('Welcome!'/*+data*/);this.router.navigate(["/home"]);}else{alert('check details!');}}
+}}).subscribe(({ data })=> {if(data==true){alert('Welcome!');this.router.navigate(["/home"]);}else alert('check details!');}
 ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home
 
 }
 else if(this.username!=null&&this.password!=null&&this.password==this.passwordConf&&this.login==false){
-
 this.apollo.mutate({ mutation: this.addBook,//this creates the account in the database and forwads to login
 variables: {
 username: this.username,password:this.password
 }}).subscribe(({ data }) => {alert('Account is generated, you will be redirected to login '+this.username);
 this.login=true;this.passwordConf="";},(error) => {alert('there was an error maybe the username already exists '+ error);});
-
 }
 }catch (error) { }
 if(this.counter==1){this.conf=false;this.counter=0;}//

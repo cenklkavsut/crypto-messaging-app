@@ -30,9 +30,9 @@ temp:string="";
   checkQuery = gql`
   mutation fetchRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
   fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
-  _id
   currentRoom
   }}`;//this query should be able to check if room exists or not
+  query = gql`query roomRetriever{ roomRetriever{currentRoom}}`;//this query should be able to check if room exists or not
 
   removeRoom = gql`
   mutation removeRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
@@ -40,7 +40,13 @@ temp:string="";
     currentRoom
   }}`;
 
-constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");}
+constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
+this.apollo.mutate({mutation: this.checkQuery,//this will get rooms to the room list
+variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+}}).subscribe(({ data }) => {this.roomList.push(data.toString());},(error) => {alert('Could not load rooms! '+error);}); 
+//this.apollo.watchQuery<any>({query: this.checkQuery,variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
+//}}).valueChanges.subscribe(({ data }) => { this.roomList.push(data);},(error) => {alert('Could not load rooms! '+error);}); 
+}
 
   join():void{
   this.roomName=this.add;
@@ -49,7 +55,7 @@ constructor(private router: Router,private route: ActivatedRoute,private apollo:
 
  this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '+data/**/);this.router.navigate(["/chat"]);}
+  }}).subscribe(({ data }) => { alert('Room selected! ');data=this.add;this.router.navigate(["/chat"]);}
   ,(error) => {alert('Please enter a room! '+error);}); 
 }
     
@@ -85,7 +91,7 @@ delete():void{
     else{
     this.apollo.mutate({mutation: this.removeRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);this.add='';alert('Room deleted! '/*+data*/);
+    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);data=this.add;this.add='';alert('Room deleted! '/*+data*/);
     },(error) => {alert('Please enter a room!');});
   }
 }
