@@ -40,10 +40,8 @@ temp:string="";
 
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-//if (!this.roomList[0]==null) {
 this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add}
-,}).valueChanges.subscribe((response) => {this.roomList.push(response.toString());});
-//}else{}
+,}).valueChanges.subscribe(({ data }) => {this.roomList.push(data.toString());});
 }
 
   join():void{
@@ -78,7 +76,6 @@ create():void{
 delete():void{
   this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
-  //const decider:Boolean =false;
   var r = confirm('Delete the room completely press on cancel only delete from list press ok!');
   if (index != -1) {
     if(r==true){
