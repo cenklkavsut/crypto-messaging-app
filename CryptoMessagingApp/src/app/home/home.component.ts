@@ -43,7 +43,7 @@ temp:string="";
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
 this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom:this.add,recipient:this.temp,sender:this.temp,passphrase:this.temp}
-,}).valueChanges.subscribe(({ data }) => { this.roomList.push(this.add+""+data);});
+,}).valueChanges.subscribe(({ data }) => { this.roomList.push(data.toString());});
 }
 
   join():void{

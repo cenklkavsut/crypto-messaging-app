@@ -111,9 +111,11 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve: async function (root, params) {
-            const roomsCall = await roomModel.find();
-            return roomsCall;
+          resolve: async function (root, params) {//this will retun back all room names
+            //const availableRooms = await roomModel.find({currentRoom:params.currentRoom,$options: 'i'});
+            //return { currentRoom: availableRooms.length };   
+            const roomFinder = roomModel.find().all.currentRoom;
+            return roomFinder        
            }
         }
       }
@@ -256,14 +258,10 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve: async (root, params)=> {
-           //await roomModel.findOneAndUpdate({ id:params.id },
-                //{currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase});
-              //return params.id;     
+          resolve: async (root, params)=> {   
               await roomModel.findOneAndUpdate({ id:params.id },
               {currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase });
-              return params.id;
-         
+              return params.id;         
           }
         },
         loginBook: {//this allows to check if book contains username and password of it if it does it returns true else returns false
@@ -292,7 +290,15 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve:async function  (root, params) {               
-            return { currentRoom: roomModel.length }.exec().limit(10).sort({ createdAt: -1 });
+            //return { currentRoom: roomModel.length }.exec().limit(10).sort({ createdAt: -1 });
+            //const user = await BookModel.findOne({ username: params.username })
+            //if (!user) {throw new Error('No such user found')}
+            //const valid = await bcrypt.compare(params.password, user.password)
+            //if (!valid) {throw new Error('Invalid password')  }
+            //const token = jwt.sign({userId: user._id},
+            //config.secret,{expiresIn: '7d'})
+            //ctx.req.session.userToken = token
+            //return user;      
          }
         },roomRetriever: {//this allows to check if a certain room exist
           type: roomType,
