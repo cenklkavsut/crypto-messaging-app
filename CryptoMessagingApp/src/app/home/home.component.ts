@@ -33,16 +33,17 @@ temp:string="";
     updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
     }}`;
+    
   checkQuery = gql`
-  mutation fetchRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
-  fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
-  _id
+  query {
+  roomsNames{
+  currentRoom
   }}`;//this query should be able to check if room exists or not
 
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add}
-,}).valueChanges.subscribe(({ data }) => { this.roomList.push(""+data);});
+this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom:this.add,recipient:this.temp,sender:this.temp,passphrase:this.temp}
+,}).valueChanges.subscribe(({ data }) => { this.roomList.push(this.add+""+data);});
 }
 
   join():void{

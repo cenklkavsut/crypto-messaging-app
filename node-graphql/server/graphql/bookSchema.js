@@ -103,6 +103,18 @@ var queryType = new GraphQLObjectType({
             }
             return roomDetails
           }
+        },roomsName: {
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve: async function (root, params) {
+            const roomsCall = await roomModel.find();
+            return roomsCall;
+           }
         }
       }
     }

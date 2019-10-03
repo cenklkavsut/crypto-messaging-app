@@ -34,7 +34,7 @@ password
 }}`;
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {}
-
+//two issues fetch current room names and check if exists username password and currentRoom names
 signIn():void{
 try{
 if(this.username!=null&& this.password!=null && this.login==true&& this.conf==false){//this allows logging in
