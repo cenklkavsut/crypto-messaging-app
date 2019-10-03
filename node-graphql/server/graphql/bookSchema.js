@@ -112,10 +112,8 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve: async function (root, params) {//this will retun back all room names
-            //const availableRooms = await roomModel.find({currentRoom:params.currentRoom,$options: 'i'});
-            //return { currentRoom: availableRooms.length };   
-            const roomFinder = roomModel.find().all.currentRoom;
-            return roomFinder        
+            const roomDetail = await roomModel.find({currentRoom:params.currentRoom});
+            return roomDetail.toString();
            }
         }
       }
@@ -235,8 +233,7 @@ var queryType = new GraphQLObjectType({
             }
             return remRoom;
           }
-        },
-        removeRooms: {
+        },removeRooms: {
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
@@ -281,7 +278,8 @@ var queryType = new GraphQLObjectType({
           const valid = await bcrypt.compare(password,user.password);         
           if (!valid) {return false;}else{return user;}*/
           }                            
-        },fetchRoom: {//this allows to fetch a certain room by room name
+        },
+        fetchRoom: {//this allows to fetch a certain room by room name
           type: roomType,
           args: {
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
@@ -289,7 +287,7 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve:async function  (root, params) {               
+          resolve:async function  (root, params) {//this should allow to fetch the room data               
             //return { currentRoom: roomModel.length }.exec().limit(10).sort({ createdAt: -1 });
             //const user = await BookModel.findOne({ username: params.username })
             //if (!user) {throw new Error('No such user found')}

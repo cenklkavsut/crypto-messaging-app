@@ -27,33 +27,30 @@ temp:string="";
   removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
   }}`;
-
   //this updates a room to the database
   updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
     updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
     }}`;
     
-  checkQuery = gql`
-  query {
-  roomsNames{
+  checkQuery = gql`query {
+  roomsName{
   currentRoom
-  }}`;//this query should be able to check if room exists or not
-
+  }}`;//this query should be able to check if room exist and then fetch the list of rooms
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom:this.add,recipient:this.temp,sender:this.temp,passphrase:this.temp}
-,}).valueChanges.subscribe(({ data }) => { this.roomList.push(data.toString());});
+this.apollo.watchQuery({query: this.checkQuery,
+}).valueChanges.subscribe(({ data }) => { this.roomList.push(""+data);});
 }
 
-  join():void{
+  join():void{//this selects the room and updates the room name and the rest as empty to be used.
   this.roomName=this.add;
   const index = this.roomList.indexOf(this.roomName);
   this.roomName=this.roomList[index]; //this could check if it exists and if it does it joins the room
 
  this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! '+data/**/);this.add=data.toString();this.router.navigate(["/chat"]);}
+  }}).subscribe(({ data }) => { alert('Room selected!'/*+data*/);this.add=data.toString();this.router.navigate(["/chat"]);}
   ,(error) => {alert('Please enter a room! '+error);}); 
 }
     

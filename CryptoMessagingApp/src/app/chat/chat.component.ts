@@ -120,7 +120,7 @@ confirm(){//allows to comfirm
  this.apollo.mutate({//updates the room user to send a message
     mutation: this.updateRoom,variables: {
     currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
-    }}).subscribe(({ data })=> {alert("information has been selected!"+data);}
+    }}).subscribe(({ data })=> {alert("information has been selected!"/*+data*/);}
   ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home /**/
   }else{
     alert("Empty or incorect information!");
