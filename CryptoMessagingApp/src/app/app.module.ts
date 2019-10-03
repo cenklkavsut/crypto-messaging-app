@@ -48,6 +48,6 @@ export class AppModule {
       link: httpLink.create({ uri: 'http://localhost:3000/graphql'}),//this url is what sends the data
       cache: new InMemoryCache()
     });
-
+    
   }
 }

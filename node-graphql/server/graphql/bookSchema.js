@@ -110,7 +110,7 @@ var queryType = new GraphQLObjectType({
               name: 'currentRoom',
               type: GraphQLString
             }}, resolve: (root, params) => {
-              return roomModel.filter(params.currentRoom).exec();
+              return roomModel.find(params.currentRoom).exec();
           }}
       }
     }
@@ -233,30 +233,41 @@ var queryType = new GraphQLObjectType({
         removeRooms: {
           type: roomType,
           args: {
-            id: {
-              type: new GraphQLNonNull(GraphQLString)
-            }
-          },
-          resolve(root, params) {
-            const remRoom = roomModel.findOneAndRemove(params.currentRoom).exec();
-            if (!remRoom) {
-              throw new Error('Error')
-            }
-            return remRoom;
-          }
-        },
-        updateRooms: {//this allows to update a certain room by room name
-          type: roomType,
-          args: {
+            //id: {name: 'id',type: new GraphQLNonNull(GraphQLString)},
             currentRoom: { type: new GraphQLNonNull(GraphQLString) },
             recipient: { type: new GraphQLNonNull(GraphQLString) },
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve(root, params) {
-            return roomModel.findOneAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
-              if (err) return next(err);
-          }).then(x => {x=bookModel.save();return  x;});
+          resolve: async(root, params) =>{
+            await roomModel.findOneAndRemove({ currentRoom:params.currentRoom });
+            const boards = await roomModel.find();
+            return { currentRoom: roomModel.length };
+      
+            //const remRoom = roomModel.findOneAndRemove(params.currentRoom).exec();
+            //if (!remRoom) {
+             // throw new Error('Error')
+            //}
+            //return remRoom;
+          }
+        },updateRooms: {//this allows to update a certain room by room name
+          type: roomType,
+          args: {
+            //id: {name: 'id',type: new GraphQLNonNull(GraphQLString)},
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve: async (root, params)=> {
+            //return roomModel.findOneAndUpdate(params.id, { currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}, function (err) {
+              //if (err) return next(err);});
+              await roomModel.findOneAndUpdate(
+                { _id:params.id },
+                {currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}
+              );
+              return params._id;
+        
           }
         },
         loginBook: {//this allows to check if book contains username and password of it if it does it returns true else returns false

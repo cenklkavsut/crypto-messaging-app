@@ -29,7 +29,7 @@ temp:string="";
 
   checkQuery = gql`
   mutation roomRetriever($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
-    roomRetriever(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
+  roomRetriever(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
   currentRoom
   }}`;//this query should be able to check if room exists or not
   removeRoom = gql`
@@ -40,11 +40,10 @@ temp:string="";
 
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
-if (!this.roomList[0]==null) {return;}
-else{
+//if (!this.roomList[0]==null) {
 this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add}
-,}).valueChanges.subscribe((response) => {this.roomList.push(response.data.toString());});
-}
+,}).valueChanges.subscribe((response) => {this.roomList.push(response.toString());});
+//}else{}
 }
 
   join():void{
@@ -54,7 +53,7 @@ this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add
 
  this.apollo.mutate({mutation: this.updateRoom,//this will be filter room and same for chat
   variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-  }}).subscribe(({ data }) => { alert('Room selected! ');this.add=data.toString();this.router.navigate(["/chat"]);}
+  }}).subscribe(({ data }) => { alert('Room selected! '+data/**/);this.add=data.toString();this.router.navigate(["/chat"]);}
   ,(error) => {alert('Please enter a room! '+error);}); 
 }
     
@@ -86,11 +85,10 @@ delete():void{
     this.roomList.splice(index, 1);  
     alert('Room deleted');
     this.add=''; 
-    }
-    else{
+    }else{
     this.apollo.mutate({mutation: this.removeRoom,
     variables: {currentRoom:this.roomName,recipient:this.temp,sender:this.temp,passphrase:this.temp
-    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);data=this.add;this.add='';alert('Room deleted! '/*+data*/);
+    }}).subscribe(({ data }) => {this.roomList.splice(index, 1);data=this.add;this.add='';alert('Room deleted! '+data/**/);
     },(error) => {alert('Please enter a room!');});
   }
 } else{ 
@@ -99,7 +97,7 @@ delete():void{
 }
 
    logout():void{
-    this.apollo.getClient().resetStore();//this supports the log out query side
+    //this.apollo.getClient().resetStore();//this supports the log out query side
     this.router.navigate(["/login"]);//here update room name with empty
   }
 
