@@ -72,6 +72,12 @@ async sendMessage(){//allows for sending message
   if (!result) {
     alert("Message is empty! result of process is "+result);// do something if result if false..
   }
+  //this should fetch the data of the current situation and send
+  this.apollo.mutate({//this updates the room information constantly when messaging!
+    mutation: this.updateRoom,variables: {
+    currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
+    }}).subscribe(({ data })=> {alert("information has been selected!"+data);}
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home /**/
 
   this.messageText='';
 }else{
@@ -111,11 +117,11 @@ const fixture = {
 
 confirm(){//allows to comfirm
   if(this.recipientId!=''&&this.SenderId!=''&&this.SenderId!=''){
-  /*this.apollo.mutate({//make a query to check if exists 
+ this.apollo.mutate({//updates the room user to send a message
     mutation: this.updateRoom,variables: {
-      currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
-    }}).subscribe(({ data })=> {alert("information has been selected!");}
-  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home*/
+    currentRoom:this.roomName,recipient:this.recipientId,sender:this.SenderId,passphrase:this.passPhrase
+    }}).subscribe(({ data })=> {alert("information has been selected!"+data);}
+  ,(error) => {alert('there was an error when loging in '+ error);});//this checks and forwards to home /**/
   }else{
     alert("Empty or incorect information!");
   }

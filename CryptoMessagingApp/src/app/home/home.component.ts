@@ -20,28 +20,29 @@ temp:string="";
   addRoom = gql`mutation addroom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   addroom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
   _id
-  }}`;
-  //this updates a room to the database
-  updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
-    updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
-    currentRoom
-    }}`;
-
-  checkQuery = gql`
-  mutation roomRetriever($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
-  roomRetriever(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
-  currentRoom
-  }}`;//this query should be able to check if room exists or not
+  }}`;  
+  //this deletes the room from the database
   removeRoom = gql`
   mutation removeRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
   removeRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
     currentRoom
   }}`;
 
+  //this updates a room to the database
+  updateRoom = gql`mutation updateRooms($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!) {
+    updateRooms(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase) {
+    currentRoom
+    }}`;
+  checkQuery = gql`
+  mutation fetchRoom($currentRoom:String!,$recipient:String!,$sender:String!,$passphrase:String!){
+  fetchRoom(currentRoom:$currentRoom,recipient:$recipient,sender:$sender,passphrase:$passphrase){
+  _id
+  }}`;//this query should be able to check if room exists or not
+
 
 constructor(private router: Router,private route: ActivatedRoute,private apollo: Apollo) {this.roomList.push("room");
 this.apollo.watchQuery({query: this.checkQuery,variables: {currentRoom: this.add}
-,}).valueChanges.subscribe(({ data }) => {this.roomList.push(data.toString());});
+,}).valueChanges.subscribe(({ data }) => { this.roomList.push(""+data);});
 }
 
   join():void{

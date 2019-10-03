@@ -103,15 +103,7 @@ var queryType = new GraphQLObjectType({
             }
             return roomDetails
           }
-        },roomRetriever: {//this allows to retrieve the list of rooms
-          type: roomType,
-          args: {
-            currentRoom: {
-              name: 'currentRoom',
-              type: GraphQLString
-            }}, resolve: (root, params) => {
-              return roomModel.find(params.currentRoom).exec();
-          }}
+        }
       }
     }
   });
@@ -253,10 +245,13 @@ var queryType = new GraphQLObjectType({
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
           resolve: async (root, params)=> {
-           await roomModel.findOneAndUpdate({ id:params.id },
-                {currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase}
-              );
-              return params.id;      
+           //await roomModel.findOneAndUpdate({ id:params.id },
+                //{currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase});
+              //return params.id;     
+              await roomModel.findOneAndUpdate({ id:params.id },
+              {currentRoom: params.currentRoom, recipient: params.recipient,sender: params.sender, passphrase: params.passphrase });
+              return params.id;
+         
           }
         },
         loginBook: {//this allows to check if book contains username and password of it if it does it returns true else returns false
@@ -284,11 +279,20 @@ var queryType = new GraphQLObjectType({
             sender: { type: new GraphQLNonNull(GraphQLString) },
             passphrase: { type: new GraphQLNonNull(GraphQLString) }
           },
-          resolve:async function  (root, params) {
-            const RoomModel = new roomModel(params);   
-            if (params.currentRoom === 'undefined'){return 'Please be sure if the room exists!';}
-            return RoomModel.filter({ where: params.currentRoom });      
+          resolve:async function  (root, params) {               
+            return { currentRoom: roomModel.length }.exec().limit(10).sort({ createdAt: -1 });
          }
+        },roomRetriever: {//this allows to check if a certain room exist
+          type: roomType,
+          args: {
+            currentRoom: { type: new GraphQLNonNull(GraphQLString) },
+            recipient: { type: new GraphQLNonNull(GraphQLString) },
+            sender: { type: new GraphQLNonNull(GraphQLString) },
+            passphrase: { type: new GraphQLNonNull(GraphQLString) }
+          },
+          resolve:async function  (root, params) {
+         
+          }
         }
       }
     }
