@@ -1,35 +1,65 @@
 <div class="container">
-  <div class= "container">   
-     <div style="text-align:center">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Crypto Messaging Application</title>
-        <script src="login.component.ts"></script>
-      </head>
-      <body>
-          <div class="container">   
-              <h1 class="form-signin-heading text-muted">Crypto Messaging Application</h1>                
-            <form class="form-signin">
-                <div class='flex flex-column'>
-                  <input type="text" ngModel [ngModelOptions]="{name:'username'}"  [(ngModel)]="username" class="form-control"placeholder="Enter your username"required>
-                  <input type="password" ngModel [ngModelOptions]="{name:'password'}"   [(ngModel)]="password" class="form-control" placeholder="Enter your password"required>                  
-                    <input
-                    *ngIf="!login"  
-                    placeholder="confirm password" type="password" ngModel [ngModelOptions]="{name:'passwordConf'}" [(ngModel)]="passwordConf" placeholder="confirm your password" class="form-control">
-                </div>
-                <div class='flex mt3'>
-                  <div
-                    class='pointer mr2 button' class="example_a" 
-                    (click)="signIn()">
-                    {{login ? 'login':'create account'}}
-                  </div>
-                  <font style="color: white"><div
-                    class='pointer button' class="example_a" 
-                    (click)="login = !login">
-                    {{login ? 'need to create an account?':'already have an account?'}}
-                  </div></font>
-                </div></form>
+  <div class="container">
+    <div style="text-align:center">
+      <div class="container">
+        <h1 class="form-signin-heading text-muted">
+          Crypto Messaging Application
+        </h1>
+        <form class="form-signin" (submit)="signIn()">
+          <div class="flex flex-column">
+            <input
+              type="text"
+              ngModel
+              [ngModelOptions]="{ name: 'username' }"
+              [(ngModel)]="username"
+              class="form-control"
+              placeholder="Enter your username"
+              required
+            />
+            <input
+              type="password"
+              ngModel
+              [ngModelOptions]="{ name: 'password' }"
+              [(ngModel)]="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
+            <input
+              *ngIf="!login"
+              placeholder="confirm password"
+              type="password"
+              ngModel
+              [ngModelOptions]="{ name: 'passwordConf' }"
+              [(ngModel)]="passwordConf"
+              placeholder="confirm your password"
+              class="form-control"
+            />
           </div>
-      </body>
-    </div></div>
+          <div class="flex mt3">
+            <button
+              type="submit"
+              class="pointer mr2 button"
+              class="example_a"
+            >
+              {{ login ? "login" : "create account" }}
+            </button>
+            <div
+              class="pointer button"
+              class="example_a"
+              (click)="login = !login"
+            >
+              <font style="color: white">
+                {{
+                  login
+                    ? "need to create an account?"
+                    : "already have an account?"
+                }}
+              </font>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
