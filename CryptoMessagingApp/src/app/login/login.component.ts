@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
           })
           .subscribe(
             ({ data }) => {  
-              alert("Welcome!" + data);
+              alert("Welcome!" /*+ data*/);
               this.router.navigate(["/home"]);
             },
             error => {

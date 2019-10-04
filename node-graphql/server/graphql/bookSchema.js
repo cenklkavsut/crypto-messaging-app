@@ -115,10 +115,8 @@ var queryType = new GraphQLObjectType({
         },
         resolve: async function(root, params) {
           //this will retun back all room names
-          const roomDetail = await roomModel.find({
-            currentRoom: params.currentRoom
-          });
-          return roomDetail.toString();
+          const roomListReturn = await roomModel.find();
+          return roomListReturn;              
         }
       }
     };
