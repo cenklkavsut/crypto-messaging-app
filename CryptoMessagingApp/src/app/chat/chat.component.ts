@@ -28,7 +28,7 @@ export class ChatComponent implements OnInit {
   message = this.messageText;
   passPhrase: string = ""; //is needed to send messages.also it is the password you use to sign your wallet
   signed = null;
-
+  start:boolean=false;
   //this updates a room to the database
   updateRoom = gql`
     mutation updateRooms(
@@ -47,12 +47,30 @@ export class ChatComponent implements OnInit {
       }
     }
   `;
-
+  //this fetch a room to the database
+  fetchRoom = gql`
+    mutation fetchRoom(
+      $currentRoom: String!
+      $recipient: String!
+      $sender: String!
+      $passphrase: String!
+    ) {
+      fetchRoom(
+        currentRoom: $currentRoom
+        recipient: $recipient
+        sender: $sender
+        passphrase: $passphrase
+      ) {
+        currentRoom
+      }
+    }
+  `;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private apollo: Apollo
   ) {
+    if(this.start==false) {prompt("Confirm the selected room!",this.roomName); this.start=true;}
     console.log(crypto); //look at the developer console output to inspect the contents of the crypto toolset
     //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
     const m = this.messageText; //the message that gets hashed to be send
@@ -122,12 +140,12 @@ export class ChatComponent implements OnInit {
       alert("enter recipient id and sender id of your wallet correctly!");
     }
 
-    //For message add this information before the signature
-    //verify Verify the given message, public key and signature combination.
-    //toArray Turn the message into a standardized array.
-    //toJson Turn the message into a JSON string using the toArray data as the source.
+//For message add this information before the signature
+//verify Verify the given message, public key and signature combination.
+//toArray Turn the message into a standardized array.
+//toJson Turn the message into a JSON string using the toArray data as the source.
 
-    /*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
+/*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
 const privateKey=crypto.privateKey.fromPassphrase(this.passPhrase);//this gets the private key of the message
 const publicKey=crypto.publicKey.fromPassphrase(this.passPhrase);//this gets the public key of the message
 crypto.publicKey.validate(publicKey);//add value that validates

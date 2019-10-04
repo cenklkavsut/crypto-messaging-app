@@ -334,16 +334,9 @@ var mutation = new GraphQLObjectType({
           passphrase: { type: new GraphQLNonNull(GraphQLString) }
         },
         resolve: async function(root, params) {
-          //this should allow to fetch the room data
-          //return { currentRoom: roomModel.length }.exec().limit(10).sort({ createdAt: -1 });
-          //const user = await bookModel.findOne({ username: params.username })
-          //if (!user) {throw new Error('No such user found')}
-          //const valid = await bcrypt.compare(params.password, user.password)
-          //if (!valid) {throw new Error('Invalid password')  }
-          //const token = jwt.sign({userId: user._id},
-          //config.secret,{expiresIn: '7d'})
-          //ctx.req.session.userToken = token
-          //return user;
+        return roomFetcher({currentRoom: params.currentRoom,
+        recipient: this.recipientId,sender: this.SenderId, passphrase: this.passPhrase }
+          );
         }
       },
       roomRetriever: {
