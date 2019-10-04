@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit {
   passPhrase: string = ""; //is needed to send messages.also it is the password you use to sign your wallet
   signed = null;
   start:boolean=false;
+  roomAdder: string = "Enter room name";
   //this updates a room to the database
   updateRoom = gql`
     mutation updateRooms(
@@ -70,7 +71,7 @@ export class ChatComponent implements OnInit {
     private route: ActivatedRoute,
     private apollo: Apollo
   ) {
-    if(this.start==false) {prompt("Confirm the selected room!",this.roomName); this.start=true;}
+    if(this.start==false) {prompt("Confirm the selected room!",this.roomAdder); this.roomName=this.roomAdder;this.start=true;}
     console.log(crypto); //look at the developer console output to inspect the contents of the crypto toolset
     //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
     const m = this.messageText; //the message that gets hashed to be send
