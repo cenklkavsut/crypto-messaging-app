@@ -72,7 +72,8 @@ export class HomeComponent implements OnInit {
 
   checkQuery = gql`
     query {
-      roomsName {
+      roomRetriever {
+        _id
         currentRoom
       }
     }
