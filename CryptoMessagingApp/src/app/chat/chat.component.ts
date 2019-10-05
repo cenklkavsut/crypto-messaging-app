@@ -125,12 +125,12 @@ export class ChatComponent implements OnInit {
           })
           .subscribe(
             ({ data }) => {
-              alert("information has been selected!" + data);
+             // alert("information has been selected!" + data);
             },
             error => {
-              alert("there was an error when loging in " + error);
+             // alert("there was an error when loging in " + error);
             }
-          ); //this checks and forwards to home /**/
+          );
 
         this.messageText = "";
       } else {
@@ -153,7 +153,7 @@ crypto.address.validate(address);
 
 const fixture = {
   data:{
-  publicKey:publicKey,signature:,//get signature and change place 
+  publicKey:publicKey,signature:this.signed,//get signature and change place 
   message: this.messageText},passphrase: this.passPhrase
 };*/
   }
@@ -193,6 +193,7 @@ const fixture = {
       alert("Empty or incorect information!");
     }
   }
-
+ 
+  //add transaction to the api pool
   ngOnInit() {}
-} //add transaction to the api pool
+}
