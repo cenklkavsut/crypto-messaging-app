@@ -70,7 +70,11 @@ export class ChatComponent implements OnInit {
     private route: ActivatedRoute,
     private apollo: Apollo
   ) {
-    if(this.start==false) {const adder=prompt("Confirm the selected room!","Enter room name"); this.roomName=adder;this.start=true;}
+    if(this.start==false) {//this allows to confirm the room name so it updates the correct room
+      const adder=prompt("Confirm the selected room!","Enter room name"); 
+      this.roomName=adder;
+      this.start=true;
+    }
     console.log(crypto); //look at the developer console output to inspect the contents of the crypto toolset
     //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
     const m = this.messageText; //the message that gets hashed to be send
@@ -85,6 +89,7 @@ export class ChatComponent implements OnInit {
       signature
     };
     //client.setVersion(2);this makes the client run on version two of ark core for cusom ark blockchain
+    //this.recieveMessage();//this allows to recieve the message
   }
 
   home(): void {
@@ -153,11 +158,11 @@ crypto.address.validate(address);
 
 const fixture = {
   data:{
-  publicKey:publicKey,signature:this.signed,//get signature and change place 
+  publicKey:publicKey,signature:this.SenderId,//get signature and change place 
   message: this.messageText},passphrase: this.passPhrase
 };*/
   }
-
+//the message need to be send and hashed  the blockchain and then unhashed from the blockchain and stored in a array.
   /*async recieveMessage(){ //the client to recieve message/transaction
  try {const response = await client.resource("transactions").all({
       senderId: this.SenderId,//this recieves message from wallet and takes sender from user
@@ -188,12 +193,11 @@ const fixture = {
           error => {
             alert("there was an error when loging in " + error);
           }
-        ); //this checks and forwards to home /**/
+        );
     } else {
       alert("Empty or incorect information!");
     }
   }
  
-  //add transaction to the api pool
-  ngOnInit() {}
+  ngOnInit() {}  //add transaction to the api pool
 }

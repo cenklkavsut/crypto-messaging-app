@@ -1,3 +1,3 @@
-//yarn relay:devnet,ark own ,yarn relay:testnet your own ark and sudo npm serve
-//the server requires mongodb and monogoose and express,graphql to be installed and can be runned through npm start
-//the app  uses Ark core js for the blockchain and angular,typscript for the application. 
+//message is a transaction that contains a string and it gets hashed the informations in direction with recipientId,sender,passphrase
+//then implment fetch messages and try to addapt send and fetch to your custom devnet
+//fix not complete login and fetch isue and try to fetch information from the app for chat. 
