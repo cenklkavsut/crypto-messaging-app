@@ -105,18 +105,12 @@ var queryType = new GraphQLObjectType({
           return roomDetails;
         }
       },
-      roomsName: {
-        type: roomType,
-        args: {
-          currentRoom: { type: new GraphQLNonNull(GraphQLString) },
-          recipient: { type: new GraphQLNonNull(GraphQLString) },
-          sender: { type: new GraphQLNonNull(GraphQLString) },
-          passphrase: { type: new GraphQLNonNull(GraphQLString) }
-        },
-        resolve: async function(root, params) {
-          //this will retun back all room names
-          const roomListReturn = await roomModel.find();
-          return roomListReturn;              
+      roomRetriever: {
+        type: new GraphQLList(roomType),
+        resolve: async function(root, params) {//this will retun back all room names
+          const roomDetails = roomModel.find(params.currentRoom);
+          if (!roomDetails) {throw new Error("Error");}
+          return roomDetails;        
         }
       }
     };
@@ -269,7 +263,6 @@ var mutation = new GraphQLObjectType({
         },
         resolve: async (root, params) => {
           await roomModel.findOneAndRemove({ currentRoom: params.currentRoom });
-          const boards = await roomModel.find();
           return { currentRoom: roomModel.length };
         }
       },
@@ -295,8 +288,7 @@ var mutation = new GraphQLObjectType({
           );
           return params.id;
         }
-      },
-      loginBook: {
+      },loginBook: {
         //this allows to check if book contains username and password of it if it does it returns true else returns false
         type: bookType,
         args: {
@@ -317,12 +309,10 @@ var mutation = new GraphQLObjectType({
           }
           /* const user =  await bookModel.findOne({ where: { username:params.username } });
           const valid = await bookModel.findOne({ where: {password:params.password} });     
-          if (!user) {return false;}   
-          const valid = await bcrypt.compare(password,user.password);         
+           if (!user) {return false;}const valid = await bcrypt.compare(password,user.password);         
           if (!valid) {return false;}else{return user;}*/
         }
-      },
-      fetchRoom: {
+      },fetchRoom: {
         //this allows to fetch a certain room by room name
         type: roomType,
         args: {
@@ -336,17 +326,6 @@ var mutation = new GraphQLObjectType({
         recipient: this.recipientId,sender: this.SenderId, passphrase: this.passPhrase }
           );
         }
-      },
-      roomRetriever: {
-        //this allows to check if a certain room exist
-        type: roomType,
-        args: {
-          currentRoom: { type: new GraphQLNonNull(GraphQLString) },
-          recipient: { type: new GraphQLNonNull(GraphQLString) },
-          sender: { type: new GraphQLNonNull(GraphQLString) },
-          passphrase: { type: new GraphQLNonNull(GraphQLString) }
-        },
-        resolve: async function(root, params) {}
       }
     };
   }

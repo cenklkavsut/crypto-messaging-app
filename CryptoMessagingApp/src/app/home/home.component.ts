@@ -69,7 +69,6 @@ export class HomeComponent implements OnInit {
       }
     }
   `;
-
   checkQuery = gql`
     query {
       roomRetriever {
