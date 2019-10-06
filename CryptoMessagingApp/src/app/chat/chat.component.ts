@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-//const Client = require("@arkecosystem/client");
-//const client = new Client("localhost:4200");//the blockchain node it point to
+//const client = require("@arkecosystem/client");
+//const Client = new client("http://localhost:4003/api/v2");//the blockchain node it point to http://my.node.ip:port/api/v2
 
 // you can find the source code for these here:// https://github.com/ArkEcosystem/core/tree/master/packages/crypto/src
 const crypto = require("@arkecosystem/crypto"); //this allows for performing crypto operations.
