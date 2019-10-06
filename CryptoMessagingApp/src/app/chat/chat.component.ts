@@ -15,7 +15,7 @@ const crypto = require("@arkecosystem/crypto"); //this allows for performing cry
   styleUrls: ["./chat.component.css"]
 })
 
-//if room is equal the same see messages from both sides send message over the blockchain and recive it.
+//it sends the message based on the passphrase and recipient and sender
 export class ChatComponent implements OnInit {
   roomName: string = "room"; //make a query that fetches the provided room
   recipientId: string = ""; //info from wallet to send or recieve message reipient is gonne be the room name
@@ -78,12 +78,12 @@ export class ChatComponent implements OnInit {
     console.log(crypto); //look at the developer console output to inspect the contents of the crypto toolset
     //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
     const m = this.messageText; //the message that gets hashed to be send
-    const hash = crypto.Crypto.HashAlgorithms.sha256(m); //the message gets hashed
+    const hash = crypto.Crypto.HashAlgorithms.sha256(m); //the message gets hashed to be send to the chain
 
     // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
-    const signature = crypto.Crypto.Message.sign(hash, this.passPhrase); //the signature that gets send
+    const signature = crypto.Crypto.Message.sign(hash, this.passPhrase); //the signature that gets the message and sends it
     this.signed = {
-      //the signed information
+      //the signed information of a string message
       message: m, // not really needed
       hash, // not really needed
       signature
@@ -153,12 +153,12 @@ export class ChatComponent implements OnInit {
 /*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
 const privateKey=crypto.privateKey.fromPassphrase(this.passPhrase);//this gets the private key of the message
 const publicKey=crypto.publicKey.fromPassphrase(this.passPhrase);//this gets the public key of the message
-crypto.publicKey.validate(publicKey);//add value that validates
-crypto.address.validate(address);
+crypto.publicKey.validate(publicKey);//this validates public key
+crypto.address.validate(address);//this validates public private
 
 const fixture = {
   data:{
-  publicKey:publicKey,signature:this.SenderId,//get signature and change place 
+  publicKey:publicKey,signature:signature,//get signature and change place 
   message: this.messageText},passphrase: this.passPhrase
 };*/
   }
