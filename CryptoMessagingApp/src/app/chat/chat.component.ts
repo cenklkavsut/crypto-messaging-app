@@ -89,7 +89,7 @@ export class ChatComponent implements OnInit {
       signature
     };
     //client.setVersion(2);this makes the client run on version two of ark core for cusom ark blockchain
-    //this.recieveMessage();//this allows to recieve the message
+    this.recieveMessage();//this allows to recieve the message
   }
 
   home(): void {
@@ -108,7 +108,7 @@ export class ChatComponent implements OnInit {
         this.messageContainer = this.messageText;
         this.messageArray.push(this.messageContainer);
         // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
-        let result = crypto.Crypto.Message.verify(this.signed.signature);
+        let result = crypto.Crypto.Message.verify(this.signed.signature);//this verifies the message and allows to be send
 
         // inspect the result of the verification process, which will be a boolean (true/falsnpm i @angular/router -se)
         console.log(result);
@@ -117,8 +117,7 @@ export class ChatComponent implements OnInit {
           alert("Message is empty! result of process is " + result); // do something if result if false..
         }
         //this should fetch the data of the current situation and send
-        this.apollo
-          .mutate({
+        this.apollo.mutate({
             //this updates the room information constantly when messaging!
             mutation: this.updateRoom,
             variables: {
@@ -145,38 +144,24 @@ export class ChatComponent implements OnInit {
       alert("enter recipient id and sender id of your wallet correctly!");
     }
 
-//For message add this information before the signature
-//verify Verify the given message, public key and signature combination.
-//toArray Turn the message into a standardized array.
-//toJson Turn the message into a JSON string using the toArray data as the source.
-
-/*const address=crypto.address.fromPassphrase(this.passPhrase);//this gets the addrss of the message 
-const privateKey=crypto.privateKey.fromPassphrase(this.passPhrase);//this gets the private key of the message
-const publicKey=crypto.publicKey.fromPassphrase(this.passPhrase);//this gets the public key of the message
-crypto.publicKey.validate(publicKey);//this validates public key
-crypto.address.validate(address);//this validates public private
-
-const fixture = {
-  data:{
-  publicKey:publicKey,signature:signature,//get signature and change place 
-  message: this.messageText},passphrase: this.passPhrase
-};*/
   }
 //the message need to be send and hashed  the blockchain and then unhashed from the blockchain and stored in a array.
-  /*async recieveMessage(){ //the client to recieve message/transaction
- try {const response = await client.resource("transactions").all({
+ async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
+ try {const response = await crypto.resource("transactions").all({//Client was changed to Crypto due to error reasons
       senderId: this.SenderId,//this recieves message from wallet and takes sender from user
       orderBy: "timestamp.epoch"
 });return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
-  } catch (e) {console.log(e);
+  //const responses = await crypto.api("node").status();
+  //return responses.data;
+  //this.messageContainer=response.data;
+} catch (e) {console.log(e);
   this.messageArray.push(this.messageContainer);//push the message in the array to be displayed
-}}*/
+}}/**///add transaction to the api pool
 
   confirm() {
     //allows to comfirm
     if (this.recipientId != "" && this.SenderId != "" && this.SenderId != "") {
-      this.apollo
-        .mutate({
+      this.apollo .mutate({
           //updates the room user to send a message
           mutation: this.updateRoom,
           variables: {
@@ -199,5 +184,5 @@ const fixture = {
     }
   }
  
-  ngOnInit() {}  //add transaction to the api pool
+  ngOnInit() {}  
 }
