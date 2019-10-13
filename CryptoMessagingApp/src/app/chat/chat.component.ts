@@ -45,8 +45,8 @@ export class ChatComponent implements OnInit {
       ) {
         currentRoom
       }
-    }
-  `;
+    }`;
+
   //this fetch a room to the database
   fetchRoom = gql`
     mutation fetchRoom(
@@ -65,6 +65,7 @@ export class ChatComponent implements OnInit {
       }
     }
   `;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -82,7 +83,7 @@ export class ChatComponent implements OnInit {
 
     // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
     const signature = crypto.Crypto.Message.sign(hash, this.passPhrase); //the signature that gets the message and sends it
-    this.signed = {
+    this.signed = {// this signs the message with data so it can be send over to the blockchain
       //the signed information of a string message
       message: m, // not really needed
       hash, // not really needed
@@ -90,6 +91,7 @@ export class ChatComponent implements OnInit {
     };
     //client.setVersion(2);this makes the client run on version two of ark core for cusom ark blockchain
     this.recieveMessage();//this allows to recieve the message
+    //this.messageArray.push(crypto.deserialize(this.signed));
   }
 
   home(): void {
@@ -108,7 +110,7 @@ export class ChatComponent implements OnInit {
         this.messageContainer = this.messageText;
         this.messageArray.push(this.messageContainer);
         // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
-        let result = crypto.Crypto.Message.verify(this.signed.signature);//this verifies the message and allows to be send
+        let result = crypto.Crypto.Message.verify(this.signed.signature);//this verifies the message and allows it to be send
 
         // inspect the result of the verification process, which will be a boolean (true/falsnpm i @angular/router -se)
         console.log(result);
@@ -147,16 +149,21 @@ export class ChatComponent implements OnInit {
   }
 //the message need to be send and hashed  the blockchain and then unhashed from the blockchain and stored in a array.
  async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
- try {const response = await crypto.resource("transactions").all({//Client was changed to Crypto due to error reasons
-      senderId: this.SenderId,//this recieves message from wallet and takes sender from user
-      orderBy: "timestamp.epoch"
-});return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
+ //try {const response = await crypto.resource("transactions").all({//Client was changed to Crypto due to error reasons
+   //   senderId: this.SenderId,//this recieves message from wallet and takes sender from user
+     // orderBy: "timestamp.epoch"
+//});return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
   //const responses = await crypto.api("node").status();
   //return responses.data;
   //this.messageContainer=response.data;
-} catch (e) {console.log(e);
-  this.messageArray.push(this.messageContainer);//push the message in the array to be displayed
-}}/**///add transaction to the api pool
+//} catch (e) {console.log(e);
+  try {//here it fetches the block with data
+    const response = await crypto.api('blocks').all('limit', 1);
+    return this.messageArray.push(response.data);//the block fethches is pushed the message in the array to be displayed
+} catch (e) {
+    console.log(e);
+  }  
+}/**///add transaction to the api pool
 
   confirm() {
     //allows to comfirm
