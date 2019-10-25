@@ -2,11 +2,15 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-//const client = require("@arkecosystem/client");
+import { json } from 'body-parser';
+// const { Connection } = require("@arkecosystem/client");
+// import * as Client from "@arkecosystem/client";
 //const Client = new client("http://localhost:4003/api/v2");//the blockchain node it point to http://my.node.ip:port/api/v2
 
 // you can find the source code for these here:// https://github.com/ArkEcosystem/core/tree/master/packages/crypto/src
-const crypto = require("@arkecosystem/crypto"); //this allows for performing crypto operations.
+import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
+
+import { Connection } from "@arkecosystem/client";
 
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
 @Component({
@@ -76,13 +80,13 @@ export class ChatComponent implements OnInit {
       this.roomName=adder;
       this.start=true;
     }
-    console.log(crypto); //look at the developer console output to inspect the contents of the crypto toolset
+    console.log(Crypto); //look at the developer console output to inspect the contents of the crypto toolset
     //const k = crypto.Identities.Keys.fromPassphrase(this.passPhrase);//this key changes the passphrase of the wallet into a address finder
     const m = this.messageText; //the message that gets hashed to be send
-    const hash = crypto.Crypto.HashAlgorithms.sha256(m); //the message gets hashed to be send to the chain
+    const hash = Crypto.HashAlgorithms.sha256(m); //the message gets hashed to be send to the chain
 
     // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
-    const signature = crypto.Crypto.Message.sign(hash, this.passPhrase); //the signature that gets the message and sends it
+    const signature = Crypto.Message.sign(hash.toString(), this.passPhrase); //the signature that gets the message and sends it
     this.signed = {// this signs the message with data so it can be send over to the blockchain
       //the signed information of a string message
       message: m, // not really needed
@@ -110,7 +114,7 @@ export class ChatComponent implements OnInit {
         this.messageContainer = this.messageText;
         this.messageArray.push(this.messageContainer);
         // see https://github.com/ArkEcosystem/core/blob/master/packages/crypto/src/crypto/message.ts
-        let result = crypto.Crypto.Message.verify(this.signed.signature);//this verifies the message and allows it to be send
+        let result = Crypto.Message.verify(this.signed.signature);//this verifies the message and allows it to be send
 
         // inspect the result of the verification process, which will be a boolean (true/falsnpm i @angular/router -se)
         console.log(result);
@@ -131,10 +135,10 @@ export class ChatComponent implements OnInit {
           })
           .subscribe(
             ({ data }) => {
-             // alert("information has been selected!" + data);
+             alert("information has been selected!" + JSON.stringify(data));
             },
             error => {
-             // alert("there was an error when loging in " + error);
+             alert("there was an error when loging in " +JSON.stringify(error));
             }
           );
 
@@ -149,17 +153,20 @@ export class ChatComponent implements OnInit {
   }
 //the message need to be send and hashed  the blockchain and then unhashed from the blockchain and stored in a array.
  async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
- //try {const response = await crypto.resource("transactions").all({//Client was changed to Crypto due to error reasons
-   //   senderId: this.SenderId,//this recieves message from wallet and takes sender from user
-     // orderBy: "timestamp.epoch"
-//});return this.messageContainer=response.data;//here its gonne push the message from the blockchain to the array
-  //const responses = await crypto.api("node").status();
-  //return responses.data;
-  //this.messageContainer=response.data;
-//} catch (e) {console.log(e);
-  try {//here it fetches the block with data
-    const response = await crypto.api('blocks').all('limit', 1);
-    return this.messageArray.push(response.data);//the block fethches is pushed the message in the array to be displayed
+  try {//here it fetches the block with data of the message 
+
+    const init = async () => {
+      const connection: Connection = new Connection("https://explorer.ark.io:8443/api");
+      let response;
+      console.log(response = await connection.api("blocks").all())
+      this.messageArray.push(response.data);
+    };
+    
+    init();
+
+    // const connection = new Client.Connection("https://explorer.ark.io:8443/api");
+    // const response = await connection.api('blocks').all('limit', 1);
+    // return this.messageArray.push(response.data);//the block fethches it and pushed the message in the array to be displayed
 } catch (e) {
     console.log(e);
   }  
