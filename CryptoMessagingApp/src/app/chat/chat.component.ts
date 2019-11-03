@@ -6,8 +6,6 @@ import { json } from 'body-parser';
 import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
 import { Connection } from "@arkecosystem/client";//this allows performing fetching operations.
 
-//const Client = new client("http://localhost:4003/api/v2");//the blockchain node it point to http://my.node.ip:port/api/v2
-
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
 @Component({
   selector: "app-chat",
@@ -89,9 +87,7 @@ export class ChatComponent implements OnInit {
       hash, // not really needed
       signature
     };
-    //client.setVersion(2);this makes the client run on version two of ark core for cusom ark blockchain
     this.recieveMessage();//this allows to recieve the message
-    //this.messageArray.push(crypto.deserialize(this.signed));
   }
 
   home(): void {
@@ -147,27 +143,20 @@ export class ChatComponent implements OnInit {
     }
 
   }
-//the message need to be send and hashed  the blockchain and then unhashed from the blockchain and stored in a array.
+//the message need to be send and hashed to the blockchain and then unhashed from the blockchain and stored in a array.
  async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
   try {//here it fetches the block with data of the message 
-
-    // const init = async () => {
-    //   const connection: Connection = new Connection("https://explorer.ark.io:8443/api");
-    //   let response;
-    //   console.log(response = await connection.api("blocks").all())
-    //   this.messageArray.push(response.data);
-    // };
-    
-    // init();
-
-    // const connection = new Client.Connection("https://explorer.ark.io:8443/api");
-    // const response = await connection.api('blocks').all('limit', 1);
-    // return this.messageArray.push(response.data);//the block fethches it and pushed the message in the array to be displayed
-
+    const init = async () => {
+      const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
+      let response;//the response will fetch it as a block
+      console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
+      this.messageArray.push(response.data);//this pushes it to the message array to display as message
+    };  
+    init();
   } catch (e) {
     console.log(e);
   }  
-}/**///add transaction to the api pool
+}
 
   confirm() {
     //allows to comfirm
