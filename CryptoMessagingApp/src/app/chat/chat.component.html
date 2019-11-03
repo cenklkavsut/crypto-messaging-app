@@ -13,6 +13,8 @@
           <div>
             <input
               type="text"
+              ngModel
+              [ngModelOptions]="{ name: 'recipientId' }"
               [(ngModel)]="recipientId"
               style="align-self: auto;"
               placeholder="Enter the recipient"
@@ -22,6 +24,8 @@
           <div>
             <input
               type="text"
+              ngModel
+              [ngModelOptions]="{ name: 'SenderId' }"
               [(ngModel)]="SenderId"
               style="align-self: auto;"
               placeholder="Enter the sender Id"
@@ -31,6 +35,8 @@
           <div>
             <input
               type="text"
+              ngModel
+              [ngModelOptions]="{ name: 'passPhrase' }"
               [(ngModel)]="passPhrase"
               style="align-self: auto;"
               placeholder="Enter wallet passphrase"
@@ -78,6 +84,8 @@
       <input
         type="text"
         class="form-control"
+        ngModel
+        [ngModelOptions]="{ name: 'messageText' }"
         [(ngModel)]="messageText"
         style="width:79%;"
         placeholder="Enter a message"

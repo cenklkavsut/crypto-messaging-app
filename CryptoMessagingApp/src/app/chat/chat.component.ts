@@ -3,8 +3,9 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { json } from 'body-parser';
-import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
-import { Connection } from "@arkecosystem/client";//this allows performing fetching operations.
+// import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
+// import { Connection } from "@arkecosystem/client";//this allows performing fetching operations.
+
 
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
 @Component({
@@ -76,17 +77,19 @@ export class ChatComponent implements OnInit {
       this.roomName=adder;
       this.start=true;
     }
-    console.log(Crypto); //look at the developer console output to inspect the contents of the crypto toolset
-    const m = this.messageText; //the message that gets hashed to be send
-    const hash = Crypto.HashAlgorithms.sha256(m); //the message gets hashed to be send to the chain
+    // console.log(Crypto); //look at the developer console output to inspect the contents of the crypto toolset
+    // const m = this.messageText; //the message that gets hashed to be send
+    // const hash = Crypto.HashAlgorithms.sha256(m); //the message gets hashed to be send to the chain
 
-    const signature = Crypto.Message.sign(hash.toString(), this.passPhrase); //the signature that gets the message and sends it
-    this.signed = {// this signs the message with data so it can be send over to the blockchain
-      //the signed information of a string message
-      message: m, // not really needed
-      hash, // not really needed
-      signature
-    };
+    // const signature = Crypto.Message.sign(hash.toString(), this.passPhrase); //the signature that gets the message and sends it
+    // this.signed = {// this signs the message with data so it can be send over to the blockchain
+    //   //the signed information of a string message
+    //   message: m, // not really needed
+    //   hash, // not really needed
+    //   signature
+    // };
+
+
     this.recieveMessage();//this allows to recieve the message
   }
 
@@ -106,16 +109,16 @@ export class ChatComponent implements OnInit {
         this.messageContainer = this.messageText;
         this.messageArray.push(this.messageContainer);
 
-        let result = Crypto.Message.verify(this.signed.signature);//this verifies the message and allows it to be send
-
+        //let result = Crypto.Message.verify(this.signed.signature);//this verifies the message and allows it to be send
         // inspect the result of the verification process, which will be a boolean (true/falsnpm i @angular/router -se)
-        console.log(result);
+        // console.log(result);
+        // if (!result) {
+        //   alert("Message is empty! result of process is " + result); // do something if result if false..
+        // }
+      //here add the new send of the next blockchain
+      
 
-        if (!result) {
-          alert("Message is empty! result of process is " + result); // do something if result if false..
-        }
-        //this should fetch the data of the current situation and send
-        this.apollo.mutate({
+         this.apollo.mutate({
             //this updates the room information constantly when messaging!
             mutation: this.updateRoom,
             variables: {
@@ -146,13 +149,16 @@ export class ChatComponent implements OnInit {
 //the message need to be send and hashed to the blockchain and then unhashed from the blockchain and stored in a array.
  async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
   try {//here it fetches the block with data of the message 
-    const init = async () => {
-      const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
-      let response;//the response will fetch it as a block
-      console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
-      this.messageArray.push(response.data);//this pushes it to the message array to display as message
-    };  
-    init();
+    // const init = async () => {
+    //   const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
+    //   let response;//the response will fetch it as a block
+    //   console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
+    //   this.messageArray.push(response.data);//this pushes it to the message array to display as message
+    // };  
+    // init();
+
+    //here add the new recieve of the next blockchain
+
   } catch (e) {
     console.log(e);
   }  
