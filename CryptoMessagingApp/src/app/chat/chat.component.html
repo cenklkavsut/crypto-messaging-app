@@ -1,64 +1,8 @@
 <div class="container">
   <div style="text-align:center">
     <div class="container">
-      <div class="dropup">
-        <button class="dropbtn" style="align-content:left;">
-          <i class="fa fa-bars"></i>Messagaging verification
-        </button>
-        <div
-          class="dropup-content"
-          style="align-content:center;align-self:auto;">
-          <font style="color: white;"
-            ><label>Ark wallet information</label></font>
-          <div>
-            <input
-              type="text"
-              ngModel
-              [ngModelOptions]="{ name: 'recipientId' }"
-              [(ngModel)]="recipientId"
-              style="align-self: auto;"
-              placeholder="Enter the recipient"
-            />
-          </div>
-
-          <div>
-            <input
-              type="text"
-              ngModel
-              [ngModelOptions]="{ name: 'SenderId' }"
-              [(ngModel)]="SenderId"
-              style="align-self: auto;"
-              placeholder="Enter the sender Id"
-            />
-          </div>
-
-          <div>
-            <input
-              type="text"
-              ngModel
-              [ngModelOptions]="{ name: 'passPhrase' }"
-              [(ngModel)]="passPhrase"
-              style="align-self: auto;"
-              placeholder="Enter wallet passphrase"
-            />
-          </div>
-
-          <div>
-            <button
-              type="button"
-              class="btn btn-success"
-              class="example_a"
-              style="height:9px;"
-              (click)="confirm()">
-              confirm
-            </button>
-          </div>
-
-        </div>
-      </div>
       <font
-        style="color: white;height:99px; align-self: auto; align-content: center;">
-        <label>Crypto Messaging Application</label></font>
+        style="color: white;height:99px; align-self: auto; align-content: center;"><label>Crypto Messaging Application</label></font>
       <button
         type="button"
         class="btn btn-default"
