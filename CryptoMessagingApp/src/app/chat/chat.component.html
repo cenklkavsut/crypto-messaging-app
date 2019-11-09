@@ -53,10 +53,12 @@
               confirm
             </button>
           </div>
+
         </div>
       </div>
       <font
-        style="color: white;height:99px; align-self: auto; align-content: center;"><label>Crypto Messaging Application</label></font>
+        style="color: white;height:99px; align-self: auto; align-content: center;">
+        <label>Crypto Messaging Application</label></font>
       <button
         type="button"
         class="btn btn-default"
@@ -65,6 +67,7 @@
         (click)="home()"
         routerLink="/home"
         routerLinkActive="active">
+        <i class="fa fa-window-close-o" style="font-size:15px"></i>
         Leave
       </button>
     </div>
@@ -97,7 +100,7 @@
         style="height:9px;"
         (click)="sendMessage()"
       >
-        Send
+      <i class="fa fa-send-o" style="font-size:15px"></i>
       </button>
     </div>
     <div class="container" style="text-align:left;">

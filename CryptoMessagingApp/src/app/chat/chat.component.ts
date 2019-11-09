@@ -6,6 +6,26 @@ import { json } from 'body-parser';
 // import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
 // import { Connection } from "@arkecosystem/client";//this allows performing fetching operations.
 
+import {Crypto} from 'crypto-js';//this is the library for crypto operations
+import {
+  Block,
+  FullNode,
+  ListOnChain,
+  HashTools,
+  KeyValueStorage,
+  SequenceStorage,
+  SmartContract,
+  NodeBrowser,
+  NetworkApi,
+  NetworkClientBrowserImpl,
+  NodeApi,
+  NodeImpl,
+  NodeTransfer,
+  NodeNetworkClient,
+  WebsocketConnector
+} from 'server';//add these files to server
+import { WebSocketConnector } from 'server/websocket-connector';
+// import {rencontres}  from 'rencontres';
 
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
 @Component({
@@ -16,7 +36,7 @@ import { json } from 'body-parser';
 
 //it sends the message based on the passphrase and recipient and sender
 export class ChatComponent implements OnInit {
-  roomName: string = "room"; //make a query that fetches the provided room
+  roomName: string = ""; //make a query that fetches the provided room
   user: string = ""; //change this admin and room to a query that retrieves
   userList = new Array<string>(); //list of users
   messageText: string = ""; //the text recieved
@@ -73,8 +93,27 @@ export class ChatComponent implements OnInit {
     private apollo: Apollo
   ) {
     if(this.start==false) {//this allows to confirm the room name so it updates the correct room
-      const adder=prompt("Confirm the selected room!","Enter room name"); 
-      this.roomName=adder;
+      const adderRoom=prompt("Confirm the selected room!","Enter room name"); 
+      this.roomName=adderRoom;
+
+      const adderRecipient=prompt("Confirm the recipient!","Enter recipient/wallet/username name"); 
+      this.recipientId=adderRecipient;
+
+      const adderSender=prompt("Confirm the sender!","Enter sender name"); 
+      this.SenderId =adderSender;     
+
+      const adderPassPhrase=prompt("Confirm the passphrase!","Enter passphrase"); 
+      this.passPhrase =adderPassPhrase;
+
+      //remove this if statment later and remove the 4 lines and add change confirm to select username
+      if(this.roomName=='x'&&this.recipientId=='x'&&this.SenderId=='x'&&this.passPhrase=='x')//
+      {
+        this.roomName="room";
+        this.recipientId="Crypto";
+        this.SenderId="Crypto";
+        this.passPhrase="stuff embody praise place rail flag affair cattle speak rural gospel city";
+      }//
+      this.confirm()//this confirm the room and add it to the server
       this.start=true;
     }
     // console.log(Crypto); //look at the developer console output to inspect the contents of the crypto toolset
@@ -88,15 +127,15 @@ export class ChatComponent implements OnInit {
     //   hash, // not really needed
     //   signature
     // };
-
-
+    
     this.recieveMessage();//this allows to recieve the message
   }
 
-  home(): void {
+  home(): void {//to go back to the page of the rooms
     this.router.navigate(["/home"]);
     alert("leaving chat!");
-  } //to go back to the page of the rooms
+  } 
+
   //send message is correct check recieve,server and blockchain connection and wallet.
   async sendMessage() {
     //allows for sending message
@@ -115,10 +154,17 @@ export class ChatComponent implements OnInit {
         // if (!result) {
         //   alert("Message is empty! result of process is " + result); // do something if result if false..
         // }
-      //here add the new send of the next blockchain
-      
 
-         this.apollo.mutate({
+      //here add the new send of the next blockchain
+    
+      let result;//hash the message
+      //(result);//send to the blockchain
+      
+      if (!result) {//if sending is false than display allert
+       alert("Message is empty! result of process is " + result); // do something if result if false..
+      }
+
+      this.apollo.mutate({
             //this updates the room information constantly when messaging!
             mutation: this.updateRoom,
             variables: {
@@ -130,7 +176,7 @@ export class ChatComponent implements OnInit {
           })
           .subscribe(
             ({ data }) => {
-             alert("information has been selected!" + JSON.stringify(data));
+             //alert("information has been selected!" + JSON.stringify(data));
             },
             error => {
              alert("there was an error when loging in " +JSON.stringify(error));
@@ -153,11 +199,16 @@ export class ChatComponent implements OnInit {
     //   const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
     //   let response;//the response will fetch it as a block
     //   console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
-    //   this.messageArray.push(response.data);//this pushes it to the message array to display as message
+    //this.messageArray.push(response.data);//this pushes it to the message array to display as message
     // };  
     // init();
 
     //here add the new recieve of the next blockchain
+    //store it in the array
+    let response;//the response will fetch it as a block
+    //get data from blockchain block
+    response=this.messageContainer ; //unhash the message from the blockchain and store in response 
+    this.messageArray.push(response);//.data this pushes it to the message array to display as message
 
   } catch (e) {
     console.log(e);
@@ -165,8 +216,8 @@ export class ChatComponent implements OnInit {
 }
 
   confirm() {
-    //allows to comfirm
-    if (this.recipientId != "" && this.SenderId != "" && this.SenderId != "") {
+    //allows to comfirm and get rid of the drop down and add everything inside the constructor or here
+    if (this.recipientId != "" && this.SenderId != "" && this.roomName != "") {
       this.apollo .mutate({
           //updates the room user to send a message
           mutation: this.updateRoom,
@@ -190,5 +241,5 @@ export class ChatComponent implements OnInit {
     }
   }
  
-  ngOnInit() {}  
+ ngOnInit() {}  
 }
