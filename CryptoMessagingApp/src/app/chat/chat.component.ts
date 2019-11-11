@@ -198,18 +198,18 @@ this.logs.unshift(this.messageContainer);
         encrypted: false
       }
       if (this.encryptMessages && this.encryptionKey) {//this bit encrypts the message
-        dataItem.message = dataItem.message.padStart(3, '=');
-        this.addEncryptionKey(this.encryptionKey);
+        dataItem.message = dataItem.message.padStart(3, '=');//this adds padding to the message
+        this.addEncryptionKey(this.encryptionKey);//this creates a new encryption key and gets rid of the previos one
         dataItem.message = CryptoJS.AES.encrypt(dataItem.message + dataItem.message.substr(-3),
-        this.encryptionKey).toString();
+        this.encryptionKey).toString();//this stores the encrypted message in message
         dataItem.encrypted = true;
+       result =dataItem.message;//this stores the mine result in the the result name
       }
       console.log(`start mining...`);
       this.fullNode.miner.addData(this.selectedBranch, dataItem);
 
-      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 30);
-      console.log(`finished mining: ${JSON.stringify(mineResult)}`);
-      result= dataItem.message;
+      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 10);//30
+      console.log(`finished mining: ${JSON.stringify(mineResult)}`);//
     }
     catch (error) {
       console.log(`error mining: ${JSON.stringify(error)}`);
@@ -246,7 +246,7 @@ this.logs.unshift(this.messageContainer);
     } else {
       alert("enter recipient id and sender id of your wallet correctly!");
     }
-
+    
   }
 //the message need to be send and hashed to the blockchain and then unhashed from the blockchain and stored in a array.
  async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
@@ -260,23 +260,24 @@ this.logs.unshift(this.messageContainer);
     // init();
 ////////////////////
 let response;//the response will fetch it as a block
-if (this.decypherCache.has(this.messageText)){
-  return this.decypherCache.get(this.messageText);}
-  let decypheredMessage = `(decrypted) ${this.messageText}`
+if (this.decypherCache.has(this.messageContainer)){//checks in a list
+  return this.decypherCache.get(this.messageContainer);//returned the decypherChache
+}
+  let decypheredMessage = `(decrypted) ${this.messageContainer}`;
   for (let key of this.otherEncryptionKeys) {
-  let decyphered = CryptoJS.AES.decrypt(this.messageText, key).toString(CryptoJS.enc.Utf8);
+  let decyphered = CryptoJS.AES.decrypt(this.messageContainer, key).toString(CryptoJS.enc.Utf8);
   if (!decyphered || decyphered.length < 6){
     continue;
   }
   let check = decyphered.substr(-3);
   decyphered = decyphered.substr(0, decyphered.length - 3);
   if (check == decyphered.substr(-3)) {
-    this.decypherCache.set(this.messageText, decyphered);
+    this.decypherCache.set(this.messageContainer, decyphered);
     decypheredMessage = decyphered;
     break;
   }
   }
-  this.decypherCache.set(this.messageText, decypheredMessage);
+  this.decypherCache.set(this.messageContainer, decypheredMessage);
   //get data from blockchain block  
   response=decypheredMessage; //unhash the message from the blockchain and store in response 
   this.messageArray.push(response);//.data this pushes it to the message array to display as message
@@ -439,7 +440,7 @@ call(){//this call the peer to peer information
     // only update current state of the blockchain
     // stop when we encounter the current branch head of the blockchain
     // if not found, replace the head of the blockchain and uses a link list like data structure similar to bitcoin
-
+    //this encryption works add 3 to the end when decrypting subtract 3
     let state = {};
     let toFetch = blockId;
     let branchState = {
@@ -682,5 +683,6 @@ call(){//this call the peer to peer information
     console.log(`blocks saved`);
   }
 /////////////////
+
 ngOnInit() {}  
 }
