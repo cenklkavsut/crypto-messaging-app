@@ -16,7 +16,7 @@ import {
     MinerImpl,
     NodeNetworkClient,
     WebsocketConnector
-} from 'blockchain-js-core'
+} from '../../../server'
 
 const profiler = require('v8-profiler')
 

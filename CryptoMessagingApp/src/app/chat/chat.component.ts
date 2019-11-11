@@ -177,33 +177,45 @@ export class ChatComponent implements OnInit {
       //here add the new send of the next blockchain
       let result;//hash the message
       //(result);//send to the blockchain
-      window.addEventListener('beforeunload', this.onUnloadListener);
-      this.loadPreferencesFromLocalStorage();
-      this.initFullNode();
+   
 //////////
-if (this.decypherCache.has(this.messageContainer)){
-return this.decypherCache.get(this.messageContainer);}
-let decypheredMessage = `(crypted) ${this.messageContainer}`
-for (let key of this.otherEncryptionKeys) {
-let decyphered = CryptoJS.AES.decrypt(this.messageContainer, key).toString(CryptoJS.enc.Utf8);
-if (!decyphered || decyphered.length < 6){
-  continue;
-}
-let check = decyphered.substr(-3);
-decyphered = decyphered.substr(0, decyphered.length - 3);
-if (check == decyphered.substr(-3)) {
-  this.decypherCache.set(this.messageContainer, decyphered);
-  decypheredMessage = decyphered;
-  break;
-}
-}
-this.decypherCache.set(this.messageContainer, decypheredMessage);
-let response;//the response will fetch it as a block
-//get data from blockchain block  
-response=decypheredMessage; //unhash the message from the blockchain and store in response 
-this.messageArray.push(response);//.data this pushes it to the message array to display as message
-////////////
+window.addEventListener('beforeunload', this.onUnloadListener);
+this.loadPreferencesFromLocalStorage();
+this.initFullNode();
 
+this.logs.unshift(this.messageContainer);
+    if (this.logs.length > 20){//if the chain bigger than 20 then pop
+      this.logs.pop();}//this pops data from the list if bigger than 20
+
+    if (this.isMining || this.messageContainer == '' || this.miningDifficulty <= 0)
+      return;
+    this.isMining = true;
+    try {
+      let dataItem = {
+        id: this.guid(),
+        author: this.recipientId,//pseudo
+        message:this.messageContainer,
+        encrypted: false
+      }
+      if (this.encryptMessages && this.encryptionKey) {//this bit encrypts the message
+        dataItem.message = dataItem.message.padStart(3, '=');
+        this.addEncryptionKey(this.encryptionKey);
+        dataItem.message = CryptoJS.AES.encrypt(dataItem.message + dataItem.message.substr(-3),
+        this.encryptionKey).toString();
+        dataItem.encrypted = true;
+      }
+      console.log(`start mining...`);
+      this.fullNode.miner.addData(this.selectedBranch, dataItem);
+
+      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 30);
+      console.log(`finished mining: ${JSON.stringify(mineResult)}`);
+      result= dataItem.message;
+    }
+    catch (error) {
+      console.log(`error mining: ${JSON.stringify(error)}`);
+    }
+      this.isMining = false;
+      ////////////
       if (!result) {//if sending is false than display allert
        alert("Message is empty! result of process is " + result); // do something if result if false..
       }
@@ -247,44 +259,31 @@ this.messageArray.push(response);//.data this pushes it to the message array to 
     // };  
     // init();
 ////////////////////
-    this.logs.unshift(this.messageContainer);
-    if (this.logs.length > 20){//if the chain bigger than 20 then pop
-      this.logs.pop();}//this pops data from the list if bigger than 20
-
-    if (this.isMining || this.messageContainer == '' || this.miningDifficulty <= 0)
-      return;
-    this.isMining = true;
-    try {
-      let dataItem = {
-        id: this.guid(),
-        author: this.pseudo,
-        message:this.messageContainer,
-        encrypted: false
-      }
-      if (this.encryptMessages && this.encryptionKey) {//this bit encrypts the message
-        dataItem.message = dataItem.message.padStart(3, '=');
-        this.addEncryptionKey(this.encryptionKey);
-        dataItem.message = CryptoJS.AES.encrypt(dataItem.message + dataItem.message.substr(-3),
-        this.encryptionKey).toString();
-        dataItem.encrypted = true;
-      }
-      console.log(`start mining...`);
-      this.fullNode.miner.addData(this.selectedBranch, dataItem);
-      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 30);
-      console.log(`finished mining: ${JSON.stringify(mineResult)}`);
-    }
-    catch (error) {
-      console.log(`error mining: ${JSON.stringify(error)}`);
-    }
-      this.isMining = false;
+let response;//the response will fetch it as a block
+if (this.decypherCache.has(this.messageText)){
+  return this.decypherCache.get(this.messageText);}
+  let decypheredMessage = `(decrypted) ${this.messageText}`
+  for (let key of this.otherEncryptionKeys) {
+  let decyphered = CryptoJS.AES.decrypt(this.messageText, key).toString(CryptoJS.enc.Utf8);
+  if (!decyphered || decyphered.length < 6){
+    continue;
+  }
+  let check = decyphered.substr(-3);
+  decyphered = decyphered.substr(0, decyphered.length - 3);
+  if (check == decyphered.substr(-3)) {
+    this.decypherCache.set(this.messageText, decyphered);
+    decypheredMessage = decyphered;
+    break;
+  }
+  }
+  this.decypherCache.set(this.messageText, decypheredMessage);
+  //get data from blockchain block  
+  response=decypheredMessage; //unhash the message from the blockchain and store in response 
+  this.messageArray.push(response);//.data this pushes it to the message array to display as message
 ////////////////////////
     //here add the new recieve of the next blockchain
     //store it in the array
-    let response;//the response will fetch it as a block
     //get data from blockchain block  
-    //response=decypheredMessage; //unhash the message from the blockchain and store in response 
-    this.messageArray.push(response);//.data this pushes it to the message array to display as message
-
   } catch (e) {
     console.log(e);
   }  
@@ -369,7 +368,7 @@ guid(){//this allows to calculate the chain set it to string
   }
 
   get incomingPeersCount() {//this counts the incoming peers
-    let count = 0
+    let count = 0;
     this.fullNode.peerInfos.forEach(peer => {
       if (this.peersSockets.has(peer) && !this.peersSockets.get(peer).isSelfInitiated)
         count++;
@@ -507,14 +506,14 @@ call(){//this call the peer to peer information
 
   addEncryptionKey(newEncryptionKey: string) {//this adds encryption key
     if (!newEncryptionKey || !newEncryptionKey.length || this.otherEncryptionKeys.includes(newEncryptionKey))
-      return;
+      return;//this allows it to encrypt
 
     this.decypherCache.clear();
     this.otherEncryptionKeys.push(newEncryptionKey);
   }
 
   removeEncryptionKey(key) {//this removes the encryption of the recieved message
-    this.otherEncryptionKeys = this.otherEncryptionKeys.filter(k => k != key);
+    this.otherEncryptionKeys = this.otherEncryptionKeys.filter(k => k != key);//this allows it to decrypt
   }
 
   toggleAutoP2P() {//this automaatically calls p2p

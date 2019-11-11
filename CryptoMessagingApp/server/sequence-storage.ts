@@ -39,7 +39,7 @@ export class SequenceStorage {
         this.ownBrowser = this.browser == null
     }
 
-    initialise() {
+    initialise() {//this makes the browser a node
         if (!this.browser) {
             this.browser = new NodeBrowser.NodeBrowser(this.node)
             this.browser.initialise()

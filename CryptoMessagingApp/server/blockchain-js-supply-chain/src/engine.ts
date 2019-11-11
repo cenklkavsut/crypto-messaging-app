@@ -95,17 +95,7 @@ export interface SupplyChainEngine {
      */
     signInUser(email: string, packedAndSignedEmail: string)
 
-    /**
-     * User registration
-     * 
-     * calls the IdentitySmartContract to register the user
-     * (only if it does not already exist)
-     * 
-     * should maybe return a promise which successes with a 'userUuid' ?
-     * NO => email is the userUuid, prove it with RSA signature !
-     * 
-     * TODO
-     */
+    
     registerUser(specification: UserSpecification)
 
     /** 
