@@ -137,13 +137,20 @@ export class ChatComponent implements OnInit {
     // };
 
 ////////////////
-      // if (this.autoSave) {//this save the information of the current block
-      //   this.saveBlocks();
-      //   this.savePreferencesToLocalStorage();
-      // }
-      // else {
-      //   this.resetStorage();//this reset the storage if it overflows or data is unreadable
-      // }
+this.onUnloadListener = event => {
+  if (this.autoSave) {
+    this.saveBlocks()
+
+    this.savePreferencesToLocalStorage()
+  }
+  else {
+    this.resetStorage()
+  }
+}
+window.addEventListener('beforeunload', this.onUnloadListener);
+this.loadPreferencesFromLocalStorage();
+this.initFullNode();
+
       this.call();
 /////////////////
 
@@ -179,10 +186,6 @@ export class ChatComponent implements OnInit {
       //(result);//send to the blockchain
    
 //////////
-window.addEventListener('beforeunload', this.onUnloadListener);
-this.loadPreferencesFromLocalStorage();
-this.initFullNode();
-
 this.logs.unshift(this.messageContainer);
     if (this.logs.length > 20){//if the chain bigger than 20 then pop
       this.logs.pop();}//this pops data from the list if bigger than 20
@@ -208,18 +211,17 @@ this.logs.unshift(this.messageContainer);
       console.log(`start mining...`);
       this.fullNode.miner.addData(this.selectedBranch, dataItem);
 
-      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 10);//30
+      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 30);
       console.log(`finished mining: ${JSON.stringify(mineResult)}`);//
     }
     catch (error) {
       console.log(`error mining: ${JSON.stringify(error)}`);
-    }
-      this.isMining = false;
-      ////////////
+    }     
+      this.isMining = false; 
       if (!result) {//if sending is false than display allert
        alert("Message is empty! result of process is " + result); // do something if result if false..
       }
-
+      ////////////
       this.apollo.mutate({
             //this updates the room information constantly when messaging!
             mutation: this.updateRoom,
@@ -260,27 +262,28 @@ this.logs.unshift(this.messageContainer);
     // init();
 ////////////////////
 let response;//the response will fetch it as a block
+
 if (this.decypherCache.has(this.messageContainer)){//checks in a list
   return this.decypherCache.get(this.messageContainer);//returned the decypherChache
 }
   let decypheredMessage = `(decrypted) ${this.messageContainer}`;
   for (let key of this.otherEncryptionKeys) {
   let decyphered = CryptoJS.AES.decrypt(this.messageContainer, key).toString(CryptoJS.enc.Utf8);
-  if (!decyphered || decyphered.length < 6){
+  if (!decyphered || decyphered.length < 20){//6
     continue;
   }
   let check = decyphered.substr(-3);
   decyphered = decyphered.substr(0, decyphered.length - 3);
   if (check == decyphered.substr(-3)) {
     this.decypherCache.set(this.messageContainer, decyphered);
-    decypheredMessage = decyphered;
+    decypheredMessage = decyphered;//if the message has been hashed then break
     break;
   }
   }
-  this.decypherCache.set(this.messageContainer, decypheredMessage);
-  //get data from blockchain block  
+  this.decypherCache.set(this.messageContainer, decypheredMessage);//get data from blockchain block  
   response=decypheredMessage; //unhash the message from the blockchain and store in response 
   this.messageArray.push(response);//.data this pushes it to the message array to display as message
+
 ////////////////////////
     //here add the new recieve of the next blockchain
     //store it in the array
@@ -425,7 +428,7 @@ call(){//this call the peer to peer information
       this.userStarted = true
     }  
 }
-
+//linked list structure
   private nextLoad: { branch, blockId } = { branch: null, blockId: null }
   private lastLoaded = { branch: null, blockId: null }
 
@@ -460,7 +463,7 @@ call(){//this call the peer to peer information
       branchState.blocks.push({ blockMetadata, blockData });
 
       blockData && blockData.previousBlockIds
-      && blockData.previousBlockIds.forEach(b => !toFetchs.some(bid => bid == b) && toFetchs.push(b))
+      && blockData.previousBlockIds.forEach(b => !toFetchs.some(bid => bid == b) && toFetchs.push(b));
 
       count++;
       if (count > this.maxNumberDisplayedMessages)
@@ -495,7 +498,7 @@ call(){//this call the peer to peer information
     this.maybeOfferP2PChannel();
   }
 //the the offer p2p generate 2 p2p channels for the chain
-  maybeOfferP2PChannel() {
+  maybeOfferP2PChannel() {//this is the contition to call it
     if (this.autoP2P && this.p2pBroker.ready && this.outgoingPeersCount < this.desiredNbOutgoingPeers) {
       this.offerP2PChannel();
     }
@@ -517,7 +520,7 @@ call(){//this call the peer to peer information
     this.otherEncryptionKeys = this.otherEncryptionKeys.filter(k => k != key);//this allows it to decrypt
   }
 
-  toggleAutoP2P() {//this automaatically calls p2p
+  toggleAutoP2P() {//this automatically calls p2p
     if (this.autoP2P) {
       this.autoP2P = false;
     }
@@ -677,7 +680,7 @@ call(){//this call the peer to peer information
 
   saveBlocks() {//this saved the block inside the chain
     let toSave = [];
-    let blocks: Map<string, Block.Block> = this.fullNode.node.blocks();
+    let blocks: Map<string, Block.Block> = this.fullNode.node.blocks();//it is stored in to a list format
     blocks.forEach((block, blockId) => toSave.push({ blockId, block }));
     localStorage.setItem(STORAGE_BLOCKS, JSON.stringify(toSave));
     console.log(`blocks saved`);
