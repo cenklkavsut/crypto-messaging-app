@@ -2,11 +2,12 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag"; //monogoose graphql express/appolo graphql.
-import { json } from 'body-parser';
+import { json } from "body-parser";
 // import {Crypto} from "@arkecosystem/crypto"; //this allows for performing crypto operations.
 // import { Connection } from "@arkecosystem/client";//this allows performing fetching operations.
 /////////
-import {//importatant for crypto operations
+import {
+  //importatant for crypto operations
   Block,
   FullNode,
   ListOnChain,
@@ -22,18 +23,18 @@ import {//importatant for crypto operations
   NodeTransfer,
   NodeNetworkClient,
   WebsocketConnector
-} from '../../../server';
-import * as PeerToPeer from '../../../server/rencontres';
-import * as CryptoJS from 'crypto-js';
-import { WebSocketConnector } from '../../../server/websocket-connector';
+} from "../../../server";
+import * as PeerToPeer from "../../../server/rencontres";
+import * as CryptoJS from "crypto-js";
+import { WebSocketConnector } from "../../../server/websocket-connector";
 //extra blockchain required
 const NETWORK_CLIENT_IMPL = new NetworkClientBrowserImpl.NetworkClientBrowserImpl();
-const STORAGE_BLOCKS = 'blocks';
-const STORAGE_SETTINGS = 'settings';
+const STORAGE_BLOCKS = "blocks";
+const STORAGE_SETTINGS = "settings";
 function sleep(time: number) {
-  return new Promise((resolve, reject) => setTimeout(resolve, time))
+  return new Promise((resolve, reject) => setTimeout(resolve, time));
 }
-declare function require(v: any): any; 
+declare function require(v: any): any;
 ///////////
 
 //the application send to the recipient and take ark to sent to the user but it does not allow the library to be used
@@ -51,8 +52,8 @@ export class ChatComponent implements OnInit {
   messageText: string = ""; //the text recieved
   messageContainer: string; //temporary message container to store in array
   messageArray = new Array<string>(); //this array needs to send to the ark core blockchain but the api doesnt allow to be send over the ark
-  message = this.messageText;  
-  start:boolean=false;
+  message = this.messageText;
+  start: boolean = false;
   recipientId: string = ""; //info from wallet to send or recieve message reipient is gonne be the room name
   SenderId: string = ""; //info from wallet to send or recieve message
   passPhrase: string = ""; //is needed to send messages.also it is the password you use to sign your wallet
@@ -74,7 +75,8 @@ export class ChatComponent implements OnInit {
       ) {
         currentRoom
       }
-    }`;
+    }
+  `;
 
   //this fetch a room to the database
   fetchRoom = gql`
@@ -100,29 +102,42 @@ export class ChatComponent implements OnInit {
     private route: ActivatedRoute,
     private apollo: Apollo
   ) {
-    if(this.start==false) {//this allows to confirm the room name so it updates the correct room
-      const adderRoom=prompt("Confirm the selected room!","Enter room name"); 
-      this.roomName=adderRoom;
+    if (this.start == false) {
+      //this allows to confirm the room name so it updates the correct room
+      const adderRoom = prompt("Confirm the selected room!", "Enter room name");
+      this.roomName = adderRoom;
 
-      const adderRecipient=prompt("Confirm the recipient!","Enter recipient/wallet/username name"); 
-      this.recipientId=adderRecipient;
+      const adderRecipient = prompt(
+        "Confirm the recipient!",
+        "Enter recipient/wallet/username name"
+      );
+      this.recipientId = adderRecipient;
 
-      const adderSender=prompt("Confirm the sender!","Enter sender name"); 
-      this.SenderId =adderSender;     
+      const adderSender = prompt("Confirm the sender!", "Enter sender name");
+      this.SenderId = adderSender;
 
-      const adderPassPhrase=prompt("Confirm the passphrase!","Enter passphrase"); 
-      this.passPhrase =adderPassPhrase;
+      const adderPassPhrase = prompt(
+        "Confirm the passphrase!",
+        "Enter passphrase"
+      );
+      this.passPhrase = adderPassPhrase;
 
       //remove this if statment later and remove the 4 lines and add change confirm to select username
-      if(this.roomName=='x'&&this.recipientId=='x'&&this.SenderId=='x'&&this.passPhrase=='x')//
-      {
-        this.roomName="room";
-        this.recipientId="Crypto";
-        this.SenderId="Crypto";
-        this.passPhrase="stuff embody praise place rail flag affair cattle speak rural gospel city";
-      }//
-      this.confirm()//this confirm the room and add it to the server
-      this.start=true;
+      if (
+        this.roomName == "x" &&
+        this.recipientId == "x" &&
+        this.SenderId == "x" &&
+        this.passPhrase == "x"
+      ) {
+        //
+        this.roomName = "room";
+        this.recipientId = "Crypto";
+        this.SenderId = "Crypto";
+        this.passPhrase =
+          "stuff embody praise place rail flag affair cattle speak rural gospel city";
+      } //
+      this.confirm(); //this confirm the room and add it to the server
+      this.start = true;
     }
     // console.log(Crypto); //look at the developer console output to inspect the contents of the crypto toolset
     // const m = this.messageText; //the message that gets hashed to be send
@@ -136,31 +151,31 @@ export class ChatComponent implements OnInit {
     //   signature
     // };
 
-////////////////
-this.onUnloadListener = event => {
-  if (this.autoSave) {
-    this.saveBlocks()
+    ////////////////
+    this.onUnloadListener = event => {
+      if (this.autoSave) {
+        this.saveBlocks();
 
-    this.savePreferencesToLocalStorage()
+        this.savePreferencesToLocalStorage();
+      } else {
+        this.resetStorage();
+      }
+    };
+    window.addEventListener("beforeunload", this.onUnloadListener);
+    this.loadPreferencesFromLocalStorage();
+    this.initFullNode();
+
+    this.call();
+    /////////////////
+
+    this.recieveMessage(); //this allows to recieve the message
   }
-  else {
-    this.resetStorage()
-  }
-}
-window.addEventListener('beforeunload', this.onUnloadListener);
-this.loadPreferencesFromLocalStorage();
-this.initFullNode();
 
-      this.call();
-/////////////////
-
-    this.recieveMessage();//this allows to recieve the message
-  }
-
-  home(): void {//to go back to the page of the rooms
+  home(): void {
+    //to go back to the page of the rooms
     this.router.navigate(["/home"]);
     alert("leaving chat!");
-  } 
+  }
 
   //send message is correct check recieve,server and blockchain connection and wallet.
   async sendMessage() {
@@ -168,7 +183,7 @@ this.initFullNode();
     if (this.recipientId != "" && this.SenderId != "") {
       //recipient is reciever and the sender is where to send to
       if (this.user == "") {
-        this.user = this.recipientId;//here it sets the username
+        this.user = this.recipientId; //here it sets the username
       }
       if (this.messageText != "") {
         this.messageContainer = this.messageText;
@@ -181,48 +196,62 @@ this.initFullNode();
         //   alert("Message is empty! result of process is " + result); // do something if result if false..
         // }
 
-      //here add the new send of the next blockchain
-      let result;//hash the message
-      //(result);//send to the blockchain
-   
-//////////
-this.logs.unshift(this.messageContainer);
-    if (this.logs.length > 20){//if the chain bigger than 20 then pop
-      this.logs.pop();}//this pops data from the list if bigger than 20
+        //here add the new send of the next blockchain
+        let result; //hash the message
+        //(result);//send to the blockchain
 
-    if (this.isMining || this.messageContainer == '' || this.miningDifficulty <= 0)
-      return;
-    this.isMining = true;
-    try {
-      let dataItem = {
-        id: this.guid(),
-        author: this.recipientId,//pseudo
-        message:this.messageContainer,
-        encrypted: false
-      }
-      if (this.encryptMessages && this.encryptionKey) {//this bit encrypts the message
-        dataItem.message = dataItem.message.padStart(3, '=');//this adds padding to the message
-        this.addEncryptionKey(this.encryptionKey);//this creates a new encryption key and gets rid of the previos one
-        dataItem.message = CryptoJS.AES.encrypt(dataItem.message + dataItem.message.substr(-3),
-        this.encryptionKey).toString();//this stores the encrypted message in message
-        dataItem.encrypted = true;
-       result =dataItem.message;//this stores the mine result in the the result name
-      }
-      console.log(`start mining...`);
-      this.fullNode.miner.addData(this.selectedBranch, dataItem);
+        //////////
+        this.logs.unshift(this.messageContainer);
+        if (this.logs.length > 20) {
+          //if the chain bigger than 20 then pop
+          this.logs.pop();
+        } //this pops data from the list if bigger than 20
 
-      let mineResult = await this.fullNode.miner.mineData(this.miningDifficulty, 30);
-      console.log(`finished mining: ${JSON.stringify(mineResult)}`);//
-    }
-    catch (error) {
-      console.log(`error mining: ${JSON.stringify(error)}`);
-    }     
-      this.isMining = false; 
-      if (!result) {//if sending is false than display allert
-       alert("Message is empty! result of process is " + result); // do something if result if false..
-      }
-      ////////////
-      this.apollo.mutate({
+        if (
+          this.isMining ||
+          this.messageContainer == "" ||
+          this.miningDifficulty <= 0
+        )
+          return;
+        this.isMining = true;
+        try {
+          let dataItem = {
+            id: this.guid(),
+            author: this.recipientId, //pseudo
+            message: this.messageContainer,
+            encrypted: false
+          };
+          if (this.encryptionKey) {
+            //this bit encrypts the message
+            dataItem.message = dataItem.message.padStart(3, "="); //this adds padding to the message
+            this.addEncryptionKey(this.encryptionKey); //this creates a new encryption key and gets rid of the previos one
+            dataItem.message = CryptoJS.AES.encrypt(
+              dataItem.message + dataItem.message.substr(-3),
+              this.encryptionKey
+            ).toString(); //this stores the encrypted message in message
+            dataItem.encrypted = true;
+            console.log("dataItem: ", dataItem);
+            result = dataItem.message; //this stores the mine result in the the result name
+          }
+          console.log(`start mining...`);
+          this.fullNode.miner.addData(this.selectedBranch, dataItem);
+
+          let mineResult = await this.fullNode.miner.mineData(
+            this.miningDifficulty,
+            30
+          );
+          console.log(`finished mining: ${JSON.stringify(mineResult)}`); //
+        } catch (error) {
+          console.log(`error mining: ${JSON.stringify(error)}`);
+        }
+        this.isMining = false;
+        if (!result) {
+          //if sending is false than display allert
+          alert("Message is empty! result of process is " + result); // do something if result if false..
+        }
+        ////////////
+        this.apollo
+          .mutate({
             //this updates the room information constantly when messaging!
             mutation: this.updateRoom,
             variables: {
@@ -234,10 +263,12 @@ this.logs.unshift(this.messageContainer);
           })
           .subscribe(
             ({ data }) => {
-             //alert("information has been selected!" + JSON.stringify(data));
+              //alert("information has been selected!" + JSON.stringify(data));
             },
             error => {
-             alert("there was an error when loging in " +JSON.stringify(error));
+              alert(
+                "there was an error when loging in " + JSON.stringify(error)
+              );
             }
           );
 
@@ -248,55 +279,61 @@ this.logs.unshift(this.messageContainer);
     } else {
       alert("enter recipient id and sender id of your wallet correctly!");
     }
-    
   }
-//the message need to be send and hashed to the blockchain and then unhashed from the blockchain and stored in a array.
- async recieveMessage(){ //the client to recieve message/transaction and change resource to api if needed
-  try {//here it fetches the block with data of the message 
-    // const init = async () => {
-    //   const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
-    //   let response;//the response will fetch it as a block
-    //   console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
-    //this.messageArray.push(response.data);//this pushes it to the message array to display as message
-    // };  
-    // init();
-////////////////////
-let response;//the response will fetch it as a block
+  //the message need to be send and hashed to the blockchain and then unhashed from the blockchain and stored in a array.
+  async recieveMessage() {
+    //the client to recieve message/transaction and change resource to api if needed
+    try {
+      //here it fetches the block with data of the message
+      // const init = async () => {
+      //   const connection: Connection = new Connection("http://0.0.0.0:4003/api/v2");//https://explorer.ark.io:8443/api here add blockchain source
+      //   let response;//the response will fetch it as a block
+      //   console.log(response = await connection.api("blocks").all());//this fetches all the data from the blockchain
+      //this.messageArray.push(response.data);//this pushes it to the message array to display as message
+      // };
+      // init();
+      ////////////////////
+      let response; //the response will fetch it as a block
 
-if (this.decypherCache.has(this.messageContainer)){//checks in a list
-  return this.decypherCache.get(this.messageContainer);//returned the decypherChache
-}
-  let decypheredMessage = `(decrypted) ${this.messageContainer}`;
-  for (let key of this.otherEncryptionKeys) {
-  let decyphered = CryptoJS.AES.decrypt(this.messageContainer, key).toString(CryptoJS.enc.Utf8);
-  if (!decyphered || decyphered.length < 20){//6
-    continue;
-  }
-  let check = decyphered.substr(-3);
-  decyphered = decyphered.substr(0, decyphered.length - 3);
-  if (check == decyphered.substr(-3)) {
-    this.decypherCache.set(this.messageContainer, decyphered);
-    decypheredMessage = decyphered;//if the message has been hashed then break
-    break;
-  }
-  }
-  this.decypherCache.set(this.messageContainer, decypheredMessage);//get data from blockchain block  
-  response=decypheredMessage; //unhash the message from the blockchain and store in response 
-  this.messageArray.push(response);//.data this pushes it to the message array to display as message
+      if (this.decypherCache.has(this.messageContainer)) {
+        //checks in a list
+        return this.decypherCache.get(this.messageContainer); //returned the decypherChache
+      }
+      let decypheredMessage = `(decrypted) ${this.messageContainer}`;
+      for (let key of this.otherEncryptionKeys) {
+        let decyphered = CryptoJS.AES.decrypt(
+          this.messageContainer,
+          key
+        ).toString(CryptoJS.enc.Utf8);
+        if (!decyphered || decyphered.length < 6) {
+          continue;
+        }
+        let check = decyphered.substr(-3);
+        decyphered = decyphered.substr(0, decyphered.length - 3);
+        if (check == decyphered.substr(-3)) {
+          this.decypherCache.set(this.messageContainer, decyphered);
+          decypheredMessage = decyphered; //if the message has been hashed then break
+          break;
+        }
+      }
+      this.decypherCache.set(this.messageContainer, decypheredMessage); //get data from blockchain block
+      response = decypheredMessage; //unhash the message from the blockchain and store in response
+      this.messageArray.push(response); //.data this pushes it to the message array to display as message
 
-////////////////////////
-    //here add the new recieve of the next blockchain
-    //store it in the array
-    //get data from blockchain block  
-  } catch (e) {
-    console.log(e);
-  }  
-}
+      ////////////////////////
+      //here add the new recieve of the next blockchain
+      //store it in the array
+      //get data from blockchain block
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   confirm() {
     //allows to comfirm and get rid of the drop down and add everything inside the constructor or here
     if (this.recipientId != "" && this.SenderId != "" && this.roomName != "") {
-      this.apollo .mutate({
+      this.apollo
+        .mutate({
           //updates the room user to send a message
           mutation: this.updateRoom,
           variables: {
@@ -318,42 +355,43 @@ if (this.decypherCache.has(this.messageContainer)){//checks in a list
       alert("Empty or incorect information!");
     }
   }
-// this contains the mining of the blockchain and blockchain interactions
+  // this contains the mining of the blockchain and blockchain interactions
 
-proposedPseudo = this.guid();
-userStarted = false;
-// To save
-pseudo = null;
-encryptMessages = false;
-encryptionKey = this.guid();
-otherEncryptionKeys: string[] = [];
-desiredNbIncomingPeers = 3;
-desiredNbOutgoingPeers = 3;
-autoP2P = false;
-autoSave = true;
-autoStart = true;
-miningDifficulty = 100;
-maxNumberDisplayedMessages = 100;
-selectedBranch = Block.MASTER_BRANCH;
-//data on the node and based on a linked list structure
-fullNode: FullNode.FullNode = null;
-  logs: string[] = []
+  proposedPseudo = this.guid();
+  userStarted = false;
+  // To save
+  pseudo = null;
+  encryptMessages = false;
+  encryptionKey = this.guid();
+  otherEncryptionKeys: string[] = [];
+  desiredNbIncomingPeers = 3;
+  desiredNbOutgoingPeers = 3;
+  autoP2P = false;
+  autoSave = true;
+  autoStart = true;
+  miningDifficulty = 100;
+  maxNumberDisplayedMessages = 100;
+  selectedBranch = Block.MASTER_BRANCH;
+  //data on the node and based on a linked list structure
+  fullNode: FullNode.FullNode = null;
+  logs: string[] = [];
   state: {
     [key: string]: {
-      branch: string
-      head: string
-      blocks: any[]
-    }
-  } = { "master": { branch: Block.MASTER_BRANCH, head: null, blocks: [] } }
+      branch: string;
+      head: string;
+      blocks: any[];
+    };
+  } = { master: { branch: Block.MASTER_BRANCH, head: null, blocks: [] } };
 
-guid(){//this allows to calculate the chain set it to string
-  //'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-  return 'xxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    let r = Math.random() * 16 | 0;
-    let v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+  guid() {
+    //this allows to calculate the chain set it to string and replacing the values
+    return "xxxxxxxxxx".replace(/[xy]/g, c => {
+      //'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+      let r = (Math.random() * 16) | 0;
+      let v = c == "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
 
   p2pBroker: PeerToPeer.PeerToPeerBrokering;
   isMining = false;
@@ -362,81 +400,113 @@ guid(){//this allows to calculate the chain set it to string
   accepting = new Map<string, { offerId: string; offerMessage: string }>();
   knownAcceptedMessages = new Set<string>();
 
-  private peersSockets = new Map<FullNode.PeerInfo, { ws: NetworkApi.WebSocket, 
-  isSelfInitiated: boolean, counterpartyId: string }>();
+  private peersSockets = new Map<
+    FullNode.PeerInfo,
+    {
+      ws: NetworkApi.WebSocket;
+      isSelfInitiated: boolean;
+      counterpartyId: string;
+    }
+  >();
   private decypherCache = new Map<string, string>();
   private onUnloadListener;
 
-  get branches() {//gets the state 
+  get branches() {
+    //gets the state
     return Object.getOwnPropertyNames(this.state);
   }
 
-  get incomingPeersCount() {//this counts the incoming peers
+  get incomingPeersCount() {
+    //this counts the incoming peers
     let count = 0;
     this.fullNode.peerInfos.forEach(peer => {
-      if (this.peersSockets.has(peer) && !this.peersSockets.get(peer).isSelfInitiated)
-        count++;
-    })
-    return count;
-  }
-
-  get outgoingPeersCount() {//this count the out going peers
-    let count = 0
-    this.fullNode.peerInfos.forEach(peer => {
-      if (this.peersSockets.has(peer) && this.peersSockets.get(peer).isSelfInitiated)
+      if (
+        this.peersSockets.has(peer) &&
+        !this.peersSockets.get(peer).isSelfInitiated
+      )
         count++;
     });
     return count;
   }
 
-    
-call(){//this call the peer to peer information
-    this.p2pBroker = new PeerToPeer.PeerToPeerBrokering(`wss://${window.location.hostname}:8999/signal`,() => {
+  get outgoingPeersCount() {
+    //this count the out going peers
+    let count = 0;
+    this.fullNode.peerInfos.forEach(peer => {
+      if (
+        this.peersSockets.has(peer) &&
+        this.peersSockets.get(peer).isSelfInitiated
+      )
+        count++;
+    });
+    return count;
+  }
+
+  call() {
+    //this call the peer to peer information
+    this.p2pBroker = new PeerToPeer.PeerToPeerBrokering(
+      `wss://${window.location.hostname}:8999/signal`,
+      () => {
         this.maybeOfferP2PChannel();
-      },(offerId, offerMessage) => {
+      },
+      (offerId, offerMessage) => {
         if (!this.autoP2P) {
           return { accepted: false, message: `nope` };
         }
         if (this.incomingPeersCount >= this.desiredNbIncomingPeers) {
           return { accepted: false, message: `nope` };
         }
-        if (this.knownAcceptedMessages.has(offerMessage) || this.accepting.has(offerMessage)) {
+        if (
+          this.knownAcceptedMessages.has(offerMessage) ||
+          this.accepting.has(offerMessage)
+        ) {
           return { accepted: false, message: `i know you` };
         }
-        this.accepting.set(offerMessage, { offerId, offerMessage })
+        this.accepting.set(offerMessage, { offerId, offerMessage });
         setTimeout(() => this.accepting.delete(offerMessage), 5000);
         console.log(`accepted offer ${offerId.substr(0, 7)}:${offerMessage}`);
 
         return { accepted: true, message: this.pseudo };
-      },(description, channel) => {
+      },
+      (description, channel) => {
         let counterPartyMessage = description.counterPartyMessage;
         this.knownAcceptedMessages.add(counterPartyMessage);
-        channel.on('close', () => this.knownAcceptedMessages.delete(counterPartyMessage));
-        this.addPeerBySocket(channel, counterPartyMessage, description.isSelfInitiated, 
-       `p2p with ${counterPartyMessage} on channel ${description.offerId.substr(0, 5)} 
+        channel.on("close", () =>
+          this.knownAcceptedMessages.delete(counterPartyMessage)
+        );
+        this.addPeerBySocket(
+          channel,
+          counterPartyMessage,
+          description.isSelfInitiated,
+          `p2p with ${counterPartyMessage} on channel ${description.offerId.substr(
+            0,
+            5
+          )} 
 
-       ${description.isSelfInitiated ? '[OUT]' : '[IN]'} (as '${this.pseudo}')`);
+       ${description.isSelfInitiated ? "[OUT]" : "[IN]"} (as '${this.pseudo}')`
+        );
         setTimeout(() => this.maybeOfferP2PChannel(), 500);
       }
     );
     setInterval(() => {
-      if (this.autoP2P && this.p2pBroker.ready)
-        this.maybeOfferP2PChannel()
+      if (this.autoP2P && this.p2pBroker.ready) this.maybeOfferP2PChannel();
     }, 10000);
 
     if (this.autoStart && this.pseudo) {
-      this.userStarted = true
-    }  
-}
-//linked list structure
-  private nextLoad: { branch, blockId } = { branch: null, blockId: null }
-  private lastLoaded = { branch: null, blockId: null }
+      this.userStarted = true;
+    }
+  }
+  //linked list structure
+  private nextLoad: { branch; blockId } = { branch: null, blockId: null };
+  private lastLoaded = { branch: null, blockId: null };
 
-  private triggerLoad(branch: string, blockId: string) {//this pass it on to the next linked list
-    this.nextLoad = { branch, blockId }
+  private triggerLoad(branch: string, blockId: string) {
+    //this pass it on to the next linked list
+    this.nextLoad = { branch, blockId };
   }
 
-  private async loadState(branch: string, blockId: string) {//loadsthe blockchain state 
+  private async loadState(branch: string, blockId: string) {
+    //loadsthe blockchain state
     if (this.state && this.state[branch] && this.state[branch].head == blockId)
       return;
 
@@ -455,51 +525,77 @@ call(){//this call the peer to peer information
     let count = 0;
     let toFetchs = [toFetch];
     while (toFetchs.length) {
-    let fetching = toFetchs.shift();
-      let blockMetadatas = await this.fullNode.node.blockChainBlockMetadata(fetching, 1);
+      let fetching = toFetchs.shift();
+      let blockMetadatas = await this.fullNode.node.blockChainBlockMetadata(
+        fetching,
+        1
+      );
       let blockMetadata = blockMetadatas && blockMetadatas[0];
-      let blockDatas = await this.fullNode.node.blockChainBlockData(fetching, 1);
+      let blockDatas = await this.fullNode.node.blockChainBlockData(
+        fetching,
+        1
+      );
       let blockData = blockDatas && blockDatas[0];
       branchState.blocks.push({ blockMetadata, blockData });
 
-      blockData && blockData.previousBlockIds
-      && blockData.previousBlockIds.forEach(b => !toFetchs.some(bid => bid == b) && toFetchs.push(b));
+      blockData &&
+        blockData.previousBlockIds &&
+        blockData.previousBlockIds.forEach(
+          b => !toFetchs.some(bid => bid == b) && toFetchs.push(b)
+        );
 
       count++;
-      if (count > this.maxNumberDisplayedMessages)
-        break;
+      if (count > this.maxNumberDisplayedMessages) break;
     }
 
     state[branch] = branchState;
     this.state = state;
   }
 
-  private initFullNode() {//this initialises the full node 
+  private initFullNode() {
+    //this initialises the full node
     this.fullNode = new FullNode.FullNode(NETWORK_CLIENT_IMPL);
 
     setInterval(() => {
-      if (this.lastLoaded.blockId != this.nextLoad.blockId || this.lastLoaded.branch != this.nextLoad.branch) {
-        this.lastLoaded = { branch: this.nextLoad.branch, blockId: this.nextLoad.blockId };
+      if (
+        this.lastLoaded.blockId != this.nextLoad.blockId ||
+        this.lastLoaded.branch != this.nextLoad.branch
+      ) {
+        this.lastLoaded = {
+          branch: this.nextLoad.branch,
+          blockId: this.nextLoad.blockId
+        };
         this.loadState(this.lastLoaded.branch, this.lastLoaded.blockId);
       }
     }, 500);
 
     this.tryLoadBlocksFromLocalStorage();
-    this.fullNode.node.addEventListener('head', async (event) => {
-      console.log(`new head on branch '${event.branch}': ${event.headBlockId.substr(0, 7)}`);
+    this.fullNode.node.addEventListener("head", async event => {
+      console.log(
+        `new head on branch '${event.branch}': ${event.headBlockId.substr(
+          0,
+          7
+        )}`
+      );
       this.triggerLoad(event.branch, event.headBlockId);
     });
   }
 
-  setPseudo(pseudo, peerToPeer) {//this sets initial data when active
+  setPseudo(pseudo, peerToPeer) {
+    //this sets initial data when active
     this.userStarted = true;
     this.pseudo = pseudo;
     this.autoP2P = peerToPeer;
     this.maybeOfferP2PChannel();
   }
-//the the offer p2p generate 2 p2p channels for the chain
-  maybeOfferP2PChannel() {//this is the contition to call it
-    if (this.autoP2P && this.p2pBroker.ready && this.outgoingPeersCount < this.desiredNbOutgoingPeers) {
+  //the the offer p2p generate 2 p2p channels for the chain
+  maybeOfferP2PChannel() {
+    //this is the contition to call it
+    if (
+      this.autoP2P &&
+      this.p2pBroker.ready &&
+      this.outgoingPeersCount < this.desiredNbOutgoingPeers
+    ) {
       this.offerP2PChannel();
     }
   }
@@ -508,96 +604,121 @@ call(){//this call the peer to peer information
     let offerId = this.p2pBroker.offerChannel(this.pseudo);
   }
 
-  addEncryptionKey(newEncryptionKey: string) {//this adds encryption key
-    if (!newEncryptionKey || !newEncryptionKey.length || this.otherEncryptionKeys.includes(newEncryptionKey))
-      return;//this allows it to encrypt
+  addEncryptionKey(newEncryptionKey: string) {
+    //this adds encryption key
+    if (
+      !newEncryptionKey ||
+      !newEncryptionKey.length ||
+      this.otherEncryptionKeys.includes(newEncryptionKey)
+    )
+      return; //this allows it to encrypt
 
     this.decypherCache.clear();
     this.otherEncryptionKeys.push(newEncryptionKey);
   }
 
-  removeEncryptionKey(key) {//this removes the encryption of the recieved message
-    this.otherEncryptionKeys = this.otherEncryptionKeys.filter(k => k != key);//this allows it to decrypt
+  removeEncryptionKey(key) {
+    //this removes the encryption of the recieved message
+    this.otherEncryptionKeys = this.otherEncryptionKeys.filter(k => k != key); //this allows it to decrypt
   }
 
-  toggleAutoP2P() {//this automatically calls p2p
+  toggleAutoP2P() {
+    //this automatically calls p2p
     if (this.autoP2P) {
       this.autoP2P = false;
-    }
-    else {
+    } else {
       this.autoP2P = true;
       this.maybeOfferP2PChannel();
     }
   }
 
-  async addPeer(peerHost, peerPort) {//this adds a peer to the chain connection through web sockets
+  async addPeer(peerHost, peerPort) {
+    //this adds a peer to the chain connection through web sockets
     console.log(`add peer ${peerHost}:${peerPort}`);
-    let ws = NETWORK_CLIENT_IMPL.createClientWebSocket(`wss://${peerHost}:${peerPort}/events`);
-    this.addPeerBySocket(ws, `${peerHost}:${peerPort}`, true, `direct peer ${peerHost}:${peerPort}`);
+    let ws = NETWORK_CLIENT_IMPL.createClientWebSocket(
+      `wss://${peerHost}:${peerPort}/events`
+    );
+    this.addPeerBySocket(
+      ws,
+      `${peerHost}:${peerPort}`,
+      true,
+      `direct peer ${peerHost}:${peerPort}`
+    );
   }
 
-  private addPeerBySocket(ws: NetworkApi.WebSocket, counterpartyId: string, isSelfInitiated: boolean, description: string) {
+  private addPeerBySocket(
+    ws: NetworkApi.WebSocket,
+    counterpartyId: string,
+    isSelfInitiated: boolean,
+    description: string
+  ) {
     let peerInfo: FullNode.PeerInfo = null;
     let connector = null;
 
-    ws.on('open', () => {//this opens the connection
+    ws.on("open", () => {
+      //this opens the connection
       console.log(`peer connected`);
       connector = new WebSocketConnector(this.fullNode.node, ws);
       peerInfo = this.fullNode.addPeer(connector, description);
       this.peersSockets.set(peerInfo, { ws, counterpartyId, isSelfInitiated });
     });
 
-    ws.on('error', (err) => {//this trigers on connection error
+    ws.on("error", err => {
+      //this trigers on connection error
       console.log(`error with peer : ${err}`);
       ws.close();
     });
 
-    ws.on('close', () => {//this closes the connection
+    ws.on("close", () => {
+      //this closes the connection
       connector && connector.terminate();
       connector = null;
       this.fullNode.removePeer(peerInfo.id);
       this.peersSockets.delete(peerInfo);
-      console.log('peer disconnected');
+      console.log("peer disconnected");
     });
   }
 
-  toggleAutomine(minedData, automineTimer) {//this allows to mine data automatically
+  toggleAutomine(minedData, automineTimer) {
+    //this allows to mine data automatically
     if (this.autoMining) {
       this.autoMining = false;
-    }
-    else {
+    } else {
       this.autoMining = true;
       let action = async () => {
-        if (this.autoMining)
-          setTimeout(action,automineTimer);
-      }
+        if (this.autoMining) setTimeout(action, automineTimer);
+      };
       action();
     }
   }
 
-  disconnectPeer(peerInfo: FullNode.PeerInfo) {//this disconects the peer that it connects to
+  disconnectPeer(peerInfo: FullNode.PeerInfo) {
+    //this disconects the peer that it connects to
     this.fullNode.removePeer(peerInfo.id);
     let ws = this.peersSockets.get(peerInfo);
     ws && ws.ws.close();
     this.peersSockets.delete(peerInfo);
   }
 
-  clearStorage() {// this clears the blockchain storage
+  clearStorage() {
+    // this clears the blockchain storage
     localStorage.clear();
-    window.removeEventListener('beforeunload', this.onUnloadListener);
+    window.removeEventListener("beforeunload", this.onUnloadListener);
     window.location.reload(true);
   }
 
-  resetStorage() {//this resets the blockchain storage
+  resetStorage() {
+    //this resets the blockchain storage
     localStorage.setItem(STORAGE_BLOCKS, JSON.stringify([]));
 
     let settings = {
       autoSave: false
-    }
+    };
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
   }
 
-  savePreferencesToLocalStorage() {//this saves the preverances of the blockchain in the local storage
+  savePreferencesToLocalStorage() {
+    //this saves the preverances of the blockchain in the local storage
     let settings = {
       pseudo: this.pseudo,
       encryptMessages: this.encryptMessages,
@@ -609,21 +730,20 @@ call(){//this call the peer to peer information
       autoP2P: this.autoP2P,
       autoSave: this.autoSave,
       autoStart: this.autoStart
-    }
+    };
 
     localStorage.setItem(STORAGE_SETTINGS, JSON.stringify(settings));
     console.log(`preferences saved`);
   }
 
-  loadPreferencesFromLocalStorage() {//this load the blockchain preferances
+  loadPreferencesFromLocalStorage() {
+    //this load the blockchain preferances
     try {
       let settingsString = localStorage.getItem(STORAGE_SETTINGS);
-      if (!settingsString || settingsString == '')
-        return;
+      if (!settingsString || settingsString == "") return;
 
       let settings = JSON.parse(settingsString);
-      if (!settings)
-        return;
+      if (!settings) return;
 
       if (settings.pseudo)
         this.proposedPseudo = this.pseudo = settings.pseudo || this.guid();
@@ -634,8 +754,13 @@ call(){//this call the peer to peer information
       if (settings.encryptionKey)
         this.encryptionKey = settings.encryptionKey || this.guid();
 
-      if (settings.otherEncryptionKeys && Array.isArray(this.otherEncryptionKeys))
-        settings.otherEncryptionKeys.forEach(element => this.otherEncryptionKeys.push(element));
+      if (
+        settings.otherEncryptionKeys &&
+        Array.isArray(this.otherEncryptionKeys)
+      )
+        settings.otherEncryptionKeys.forEach(element =>
+          this.otherEncryptionKeys.push(element)
+        );
 
       if (settings.desiredNbIncomingPeers)
         this.desiredNbIncomingPeers = settings.desiredNbIncomingPeers || 3;
@@ -644,18 +769,18 @@ call(){//this call the peer to peer information
         this.desiredNbOutgoingPeers = settings.desiredNbOutgoingPeers || 3;
 
       if (settings.miningDifficulty)
-      this.miningDifficulty = settings.miningDifficulty;
+        this.miningDifficulty = settings.miningDifficulty;
       this.autoP2P = !!settings.autoP2P;
       this.autoSave = !!settings.autoSave;
       this.autoStart = !!settings.autoStart;
       console.log(`preferences loaded`);
-    }
-    catch (e) {
+    } catch (e) {
       console.log(`error loading preferences`);
     }
   }
 
-  private async tryLoadBlocksFromLocalStorage() {//this loads the messages saved in blocks from local storage
+  private async tryLoadBlocksFromLocalStorage() {
+    //this loads the messages saved in blocks from local storage
     let storageBlocksString = localStorage.getItem(STORAGE_BLOCKS);
     if (storageBlocksString) {
       try {
@@ -666,26 +791,27 @@ call(){//this call the peer to peer information
           for (let { blockId, block } of storageBlocks) {
             this.fullNode.node.registerBlock(blockId, block);
             i++;
-            if (i % 2 == 0)//if there are no blocks left then stop data 
+            if (i % 2 == 0)
+              //if there are no blocks left then stop data
               await sleep(20);
           }
           console.log(`blocks restored from local storage`);
         }
-      }
-      catch (e) {
+      } catch (e) {
         console.log(`error loading from local storage : ${e}`);
       }
     }
   }
 
-  saveBlocks() {//this saved the block inside the chain
+  saveBlocks() {
+    //this saved the block inside the chain
     let toSave = [];
-    let blocks: Map<string, Block.Block> = this.fullNode.node.blocks();//it is stored in to a list format
+    let blocks: Map<string, Block.Block> = this.fullNode.node.blocks(); //it is stored in to a list format
     blocks.forEach((block, blockId) => toSave.push({ blockId, block }));
     localStorage.setItem(STORAGE_BLOCKS, JSON.stringify(toSave));
     console.log(`blocks saved`);
   }
-/////////////////
+  /////////////////
 
-ngOnInit() {}  
+  ngOnInit() {}
 }
